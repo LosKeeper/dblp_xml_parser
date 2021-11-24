@@ -3,6 +3,7 @@
 
 typedef struct parse {
     char * title;
+    int nbAuthor;
     char * author;
 }parse;
 
@@ -11,14 +12,12 @@ int main(int argc, char ** argv){
     if(argc < 1 || argc > 2){
         return 0;
     }
+    char buffer[200];
+    fgets(buffer,200,entree);
     do{
-        char buffer[1000];
-        fgets(buffer,1000,entree);
         if(strstr(buffer, "<article")){
             printf("ARTICLE\n------------------------------------------------\n");
             do{
-                fgets(buffer,1000,entree);
-                //printf("%s",buffer);
                 char * author = strstr(buffer,"<author>");
                 char * title = strstr(buffer,"<title>");
                 if(author){
@@ -29,8 +28,12 @@ int main(int argc, char ** argv){
                     strstr(buffer,"</title>")[0]='\0';
                     printf("Titre : %s\n",title+7);
                 }
+                fgets(buffer,1000,entree);
             }while(!strstr(buffer,"</article>"));
             printf("------------------------------------------------\n\n");
+        }
+        else {
+            fgets(buffer,200,entree);
         }
     }while(!feof(entree));
 }
