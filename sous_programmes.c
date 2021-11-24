@@ -13,8 +13,8 @@ int co_auteurs(char * auteur1, char *auteur2){
     }
     else{
         char* marqueur;
-        while(fscanf(fichier, "%c", &marqueur)!=EOF){
-
+        while(fgets(marqueur,1000, fichier)!=EOF){
+            char *chaine=strstr(marqueur, ";")+1;
         }
     }
     fclose(fichier);
