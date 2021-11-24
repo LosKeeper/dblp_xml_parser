@@ -16,8 +16,9 @@ int main(int argc, char ** argv){
         fgets(buffer,1000,entree);
         if(strstr(buffer, "<article")){
             printf("ARTICLE\n------------------------------------------------\n");
-            while(!strstr(buffer,"</article>")){
+            do{
                 fgets(buffer,1000,entree);
+                //printf("%s",buffer);
                 char * author = strstr(buffer,"<author>");
                 char * title = strstr(buffer,"<title>");
                 if(author){
@@ -28,8 +29,9 @@ int main(int argc, char ** argv){
                     strstr(buffer,"</title>")[0]='\0';
                     printf("Titre : %s\n",title+7);
                 }
-            }
+            }while(!strstr(buffer,"</article>"));
             printf("------------------------------------------------\n\n");
         }
     }while(!feof(entree));
 }
+
