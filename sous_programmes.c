@@ -15,9 +15,9 @@ int co_auteurs(char * auteur1, char *auteur2){
     else{
         char buffer[1000];
         fgets(buffer,1000, fichier)
-        char chaine1[1000];
-        char chaine2[1000];
-        strstr(buffer,";")+1;
+        char chaine1[100];
+        char chaine2[100];
+        strcpy(buffer-1,strstr(buffer, ";"));
         strcpy(chaine1,buffer);
         strcpy(chaine2,buffer);
         do{
