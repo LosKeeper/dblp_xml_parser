@@ -1,6 +1,7 @@
 #include "xmlp.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 typedef struct parser_context_t {
@@ -11,6 +12,28 @@ typedef struct parser_context_t {
 
 int lecture=0;
 int tag_author=0;
+int nbTitre=0;
+int nbAuteur=0;
+
+typedef struct donnees {
+  int nbAuteurs;
+  size_t longueurTitre;
+  size_t longueurTot;
+  char* auteurs;
+  char* titre;
+}donnees;
+
+void strAdd(char* chaine, char* mot){
+  size_t longueurChaine=strlen(chaine);
+  size_t longueurMot=strlen(mot);
+  size_t longueurTot=longueurChaine+longueurMot;
+  chaine=realloc(chaine,longueurTot+1);
+  chaine[longueurChaine]=';';
+  for(size_t i=longueurChaine+1; i<longueurChaine+longueurMot; i++){
+    chaine[i]=mot[i-longueurChaine];
+  }
+  chaine[longueurTot]='\0';
+}
 
 void handleText(char *txt, void *data) {
   parser_context_t *context = data;
@@ -28,6 +51,10 @@ void handleOpenTag(char *tag, void *data) {
     lecture=1;
     if(!strcmp(tag,"author")){
       tag_author=1;
+      nbAuteur++;
+    }
+    if(!strcmp(tag,"title")){
+      nbTitre++;
     }
   }
 }
@@ -60,14 +87,8 @@ int main(int argc, char **argv)
   int err;
   if(PARSER_OK != (err = parse(argv[1], &info)))
   {
+    printf("NB TITRES : %d\nNB AUTEURS : %d\n",nbTitre,nbAuteur);
     return err;
   }
-
-  printf(
-    "open: %i\nclose: %i\ntext: %i\n", 
-    context.open_count, 
-    context.close_count, 
-    context.text_count);
-
   return 0;
 }
