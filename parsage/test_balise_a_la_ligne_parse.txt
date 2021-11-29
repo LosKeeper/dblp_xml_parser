@@ -1,0 +1,339 @@
+TEXT 
+
+OPEN TAG author
+TEXT Farshad Nayeri
+CLOSE TAG author
+TEXT 
+
+OPEN TAG author
+TEXT Benjamin Hurwitz
+CLOSE TAG author
+TEXT 
+
+OPEN TAG title
+TEXT Experiments with Dispatching in a Distributed Object System.
+CLOSE TAG title
+TEXT 
+
+OPEN TAG journal
+TEXT GTE Laboratories Incorporated
+CLOSE TAG journal
+TEXT 
+
+OPEN TAG volume
+TEXT TR-0236-09-93-165
+CLOSE TAG volume
+TEXT 
+
+OPEN TAG month
+TEXT July
+CLOSE TAG month
+TEXT 
+
+OPEN TAG year
+TEXT 1993
+CLOSE TAG year
+TEXT 
+
+OPEN TAG url
+TEXT db/journals/gtelab/index.html#TR-0236-09-93-165
+CLOSE TAG url
+TEXT 
+
+CLOSE TAG article
+TEXT 
+
+TEXT 
+
+OPEN TAG author
+TEXT Frank Manola
+CLOSE TAG author
+TEXT 
+
+OPEN TAG author
+TEXT Mark F. Hornick
+CLOSE TAG author
+TEXT 
+
+OPEN TAG author
+TEXT Alejandro P. Buchmann
+CLOSE TAG author
+TEXT 
+
+OPEN TAG title
+TEXT Object Data Model Facilities for Multimedia Data Types.
+CLOSE TAG title
+TEXT 
+
+OPEN TAG journal
+TEXT GTE Laboratories Incorporated
+CLOSE TAG journal
+TEXT 
+
+OPEN TAG volume
+TEXT TM-0332-11-90-165
+CLOSE TAG volume
+TEXT 
+
+OPEN TAG month
+TEXT December
+CLOSE TAG month
+TEXT 
+
+OPEN TAG year
+TEXT 1990
+CLOSE TAG year
+TEXT 
+
+OPEN TAG url
+TEXT db/journals/gtelab/index.html#TM-0332-11-90-165
+CLOSE TAG url
+TEXT 
+
+CLOSE TAG article
+TEXT 
+
+TEXT 
+
+OPEN TAG author
+TEXT Frank Manola
+CLOSE TAG author
+TEXT 
+
+OPEN TAG title
+TEXT MetaObject Protocol Concepts for a RISC Object Model.
+CLOSE TAG title
+TEXT 
+
+OPEN TAG journal
+TEXT GTE Laboratories Incorporated
+CLOSE TAG journal
+TEXT 
+
+OPEN TAG volume
+TEXT TR-0244-12-93-165
+CLOSE TAG volume
+TEXT 
+
+OPEN TAG month
+TEXT December
+CLOSE TAG month
+TEXT 
+
+OPEN TAG year
+TEXT 1993
+CLOSE TAG year
+TEXT 
+
+OPEN TAG url
+TEXT db/journals/gtelab/index.html#TR-0244-12-93-165
+CLOSE TAG url
+TEXT 
+
+CLOSE TAG article
+TEXT 
+
+TEXT 
+
+OPEN TAG author
+TEXT Alejandro P. Buchmann
+CLOSE TAG author
+TEXT 
+
+OPEN TAG author
+TEXT M. Tamer &Ouml;zsu
+CLOSE TAG author
+TEXT 
+
+OPEN TAG author
+TEXT Dimitrios Georgakopoulos
+CLOSE TAG author
+TEXT 
+
+OPEN TAG title
+TEXT Towards a Transaction Management System for DOM.
+CLOSE TAG title
+TEXT 
+
+OPEN TAG journal
+TEXT GTE Laboratories Incorporated
+CLOSE TAG journal
+TEXT 
+
+OPEN TAG volume
+TEXT TR-0146-06-91-165
+CLOSE TAG volume
+TEXT 
+
+OPEN TAG month
+TEXT June
+CLOSE TAG month
+TEXT 
+
+OPEN TAG year
+TEXT 1991
+CLOSE TAG year
+TEXT 
+
+OPEN TAG url
+TEXT db/journals/gtelab/index.html#TR-0146-06-91-165
+CLOSE TAG url
+TEXT 
+
+CLOSE TAG article
+TEXT 
+
+TEXT 
+
+OPEN TAG author
+TEXT Michael L. Brodie
+CLOSE TAG author
+TEXT 
+
+OPEN TAG author
+TEXT Michael Stonebraker
+CLOSE TAG author
+TEXT 
+
+OPEN TAG title
+TEXT DARWIN: On the Incremental Migration of Legacy Information Systems
+CLOSE TAG title
+TEXT 
+
+OPEN TAG journal
+TEXT GTE Laboratories Incorporated
+CLOSE TAG journal
+TEXT 
+
+OPEN TAG volume
+TEXT TR-0222-10-92-165
+CLOSE TAG volume
+TEXT 
+
+OPEN TAG month
+TEXT March
+CLOSE TAG month
+TEXT 
+
+OPEN TAG year
+TEXT 1993
+CLOSE TAG year
+TEXT 
+
+OPEN TAG url
+TEXT db/journals/gtelab/index.html#TR-0222-10-92-165
+CLOSE TAG url
+TEXT 
+
+OPEN TAG note
+TEXT This report is also available as a Technical Memorandum of Electronics Research Laboratory, College of Engineering, University of California, Berkeley.
+CLOSE TAG note
+TEXT 
+
+CLOSE TAG article
+TEXT 
+
+TEXT 
+
+OPEN TAG editor
+TEXT Paul R. McJones
+CLOSE TAG editor
+TEXT 
+
+OPEN TAG title
+TEXT The 1995 SQL Reunion: People, Project, and Politics, May 29, 1995.
+CLOSE TAG title
+TEXT 
+
+OPEN TAG journal
+TEXT Digital System Research Center Report
+CLOSE TAG journal
+TEXT 
+
+OPEN TAG volume
+TEXT SRC1997-018
+CLOSE TAG volume
+TEXT 
+
+OPEN TAG year
+TEXT 1997
+CLOSE TAG year
+TEXT 
+
+OPEN TAG ee
+TEXT http://www.mcjones.org/System_R/SQL_Reunion_95/
+CLOSE TAG ee
+TEXT 
+
+CLOSE TAG article
+TEXT 
+
+TEXT 
+
+OPEN TAG author
+TEXT Michael Stonebraker
+CLOSE TAG author
+TEXT 
+
+OPEN TAG title
+TEXT Muffin: A Distributed Database Machine
+CLOSE TAG title
+TEXT 
+
+OPEN TAG journal
+TEXT University of California at Berkeley
+CLOSE TAG journal
+TEXT 
+
+OPEN TAG volume
+TEXT UCB/ERL M79/28
+CLOSE TAG volume
+TEXT 
+
+OPEN TAG month
+TEXT May
+CLOSE TAG month
+TEXT 
+
+OPEN TAG year
+TEXT 1979
+CLOSE TAG year
+TEXT 
+
+CLOSE TAG article
+TEXT 
+
+TEXT 
+
+OPEN TAG title
+TEXT Computer Science Curricula 2013
+CLOSE TAG title
+TEXT 
+
+OPEN TAG publisher
+TEXT ACM Press and IEEE Computer Society Press
+CLOSE TAG publisher
+TEXT 
+
+OPEN TAG year
+TEXT 2013
+CLOSE TAG year
+TEXT 
+
+OPEN TAG ee
+TEXT https://doi.org/10.1145/2534860
+CLOSE TAG ee
+TEXT 
+
+OPEN TAG ee
+TEXT https://www.wikidata.org/entity/Q107021707
+CLOSE TAG ee
+TEXT 
+
+OPEN TAG isbn
+TEXT 978-1-4503-2309-3
+CLOSE TAG isbn
+TEXT 
+
+CLOSE TAG book
+CLOSE TAG dblp
