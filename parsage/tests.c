@@ -1,5 +1,6 @@
 #include "xmlp.h"
 #include <stdio.h>
+#include <string.h>
 
 
 typedef struct parser_context_t {
@@ -8,23 +9,32 @@ typedef struct parser_context_t {
     int close_count;
 } parser_context_t;
 
+int lecture=0;
 
 void handleText(char *txt, void *data) {
   parser_context_t *context = data;
-  context->text_count++;
-  printf("TEXT %s\n", txt);
+  if(lecture){
+    context->text_count++;
+    printf("TEXT %s\n", txt);
+  }
 }
 
 void handleOpenTag(char *tag, void *data) {
   parser_context_t *context = data;
-  context->open_count++;
-  printf("OPEN TAG %s\n", tag);
+  if(!strcmp(tag,"author")||!strcmp(tag,"title")){
+    context->open_count++;
+    printf("OPEN TAG %s\n", tag);
+    lecture=1;
+  }
 }
 
 void handleCloseTag(char *tag, void *data) {
   parser_context_t *context = data;
-  context->close_count++;
-  printf("CLOSE TAG %s\n", tag);
+  if(!strcmp(tag,"author")||!strcmp(tag,"title")){
+    context->close_count++;
+    printf("CLOSE TAG %s\n", tag);
+    lecture=0;
+  }
 }
 
 
