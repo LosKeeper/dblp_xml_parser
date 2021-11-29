@@ -10,30 +10,37 @@ typedef struct parser_context_t {
 } parser_context_t;
 
 int lecture=0;
+int tag_author=0;
 
 void handleText(char *txt, void *data) {
   parser_context_t *context = data;
   if(lecture){
     context->text_count++;
-    printf("TEXT %s\n", txt);
+    printf("%s %ld\n", txt,strlen(txt));
   }
 }
 
 void handleOpenTag(char *tag, void *data) {
   parser_context_t *context = data;
-  if(!strcmp(tag,"author")||!strcmp(tag,"title")){
+  if(!strcmp(tag,"author")||(!strcmp(tag,"title")&&tag_author)){
     context->open_count++;
-    printf("OPEN TAG %s\n", tag);
+    printf("%s : ", tag);
     lecture=1;
+    if(!strcmp(tag,"author")){
+      tag_author=1;
+    }
   }
 }
 
 void handleCloseTag(char *tag, void *data) {
   parser_context_t *context = data;
-  if(!strcmp(tag,"author")||!strcmp(tag,"title")){
+  if(!strcmp(tag,"author")||(!strcmp(tag,"title")&&tag_author)){
     context->close_count++;
-    printf("CLOSE TAG %s\n", tag);
+    //printf("CLOSE TAG %s\n", tag);
     lecture=0;
+    if(!strcmp(tag,"title")){
+      tag_author=0;
+    }
   }
 }
 
