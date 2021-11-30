@@ -50,3 +50,7 @@ int co_auteurs(char * auteur1, char *auteur2){
     }
     fclose(fichier);
 }
+
+
+
+/** https://github.com/samsonmolou/dijsktra-algorithm/blob/master/main.c */
