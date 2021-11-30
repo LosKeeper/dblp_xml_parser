@@ -2,7 +2,29 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+/**
+int inverser_chaine(char* auteurs){
+        char str[100], rev[100];
+    int t, i, j;
+ 
+    
+    j = 0;
+    t = strlen(auteurs);
+ 
+    rev[t] = '\0'; //le dernier caractère doit toujours être égale à '\0'.
+    for (i = t - 1; i >= 0; i--)
+    {
+      rev[j++] = str[i];
+    }
+    rev[i] = '\0';
+    printf("%s\n", rev);
+    return 0;
+}
+*/
 
+void inverser_ordre_auteurs(char* liste_auteurs){
+    
+}
 int co_auteurs(char * auteur1, char *auteur2){
     int k=0;
     FILE* fichier=NULL; 
@@ -24,9 +46,7 @@ int co_auteurs(char * auteur1, char *auteur2){
             strstr(chaine1,";")[k]='\0';
             strstr(chaine2,";")[k+1]='\0';
             k+=1;
-        }while(buffer!=\0);
-       // char *chaine1=strstr(buffer, ";")+1;
-        //char *chaine2=strstr(buffer, ";")+1;
+        }while(buffer!=\0);                 
     }
     fclose(fichier);
 }
