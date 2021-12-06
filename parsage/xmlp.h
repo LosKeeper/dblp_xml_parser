@@ -7,13 +7,18 @@ typedef enum parser_error_type_t {
     ERROR_UNEXPECTED_END_OF_TAG
 } parser_error_type_t;
 
+typedef struct donnees {
+  int nbAuteurs;
+  char* auteurs;
+  char* titre;
+}donnees;
+
 typedef struct parser_info_t {
-    void (*handleOpenTag)(char*, void*);
-    void (*handleCloseTag)(char*, void*);
-    void (*handleText)(char*, void*);
+    void (*handleOpenTag)(char*, void*, donnees*);
+    void (*handleCloseTag)(char*, void*, donnees*);
+    void (*handleText)(char*, void*, donnees*);
     void *data;
 } parser_info_t;
-
 
 /**
  * @brief Open and parse the file pointed by filename
@@ -23,6 +28,6 @@ typedef struct parser_info_t {
  * 
  * @return PARSER_OK if everything went fine, an error otherwise
  */
-parser_error_type_t parse(const char *filename, parser_info_t *info);
+parser_error_type_t parse(const char *filename, parser_info_t *info, donnees *xmlData);
 
 #endif

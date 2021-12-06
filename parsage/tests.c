@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define STR_LEN_DEF 1000
 
 typedef struct parser_context_t {
     int text_count;
@@ -12,71 +13,71 @@ typedef struct parser_context_t {
 
 int lecture=0;
 int tag_author=0;
-int nbTitre=0;
-int nbAuteur=0;
+int structInit=0;
 
-typedef struct donnees {
-  int nbAuteurs;
-  size_t longueurTitre;
-  size_t longueurTot;
-  char* auteurs;
-  char* titre;
-}donnees;
-
-void strAdd(char* chaine, char* mot){
-  size_t longueurChaine=strlen(chaine);
-  size_t longueurMot=strlen(mot);
-  size_t longueurTot=longueurChaine+longueurMot;
-  chaine=realloc(chaine,longueurTot+1);
-  chaine[longueurChaine]=';';
-  for(size_t i=longueurChaine+1; i<longueurChaine+longueurMot; i++){
-    chaine[i]=mot[i-longueurChaine];
-  }
-  chaine[longueurTot]='\0';
+void printBinaire(FILE* file,donnees * data){
+  fprintf(file,"%d;%s%s\n",data->nbAuteurs,data->auteurs,data->titre);
 }
 
-void handleText(char *txt, void *data) {
+void initStruct(donnees* xmlData){
+  free(xmlData->auteurs);
+  free(xmlData->titre);
+  xmlData->nbAuteurs=0;
+  xmlData->auteurs=malloc(STR_LEN_DEF);
+  xmlData->auteurs[0]='\0';
+  xmlData->titre=malloc(STR_LEN_DEF);
+  xmlData->titre[0]='\0';
+}
+
+void handleText(char *txt, void *data, donnees *xmlData) {
   parser_context_t *context = data;
   if(lecture){
     context->text_count++;
-    printf("%s %ld\n", txt,strlen(txt));
+    if(tag_author){
+      strcat(xmlData->auteurs,strcat(txt,";"));
+    }
+    else {
+      xmlData->titre=txt;
+    }
   }
 }
 
-void handleOpenTag(char *tag, void *data) {
+void handleOpenTag(char *tag, void *data, donnees *xmlData) {
   parser_context_t *context = data;
   if(!strcmp(tag,"author")||(!strcmp(tag,"title")&&tag_author)){
     context->open_count++;
-    printf("%s : ", tag);
     lecture=1;
     if(!strcmp(tag,"author")){
       tag_author=1;
-      nbAuteur++;
-    }
-    if(!strcmp(tag,"title")){
-      nbTitre++;
+      xmlData->nbAuteurs++;
     }
   }
 }
 
-void handleCloseTag(char *tag, void *data) {
+void handleCloseTag(char *tag, void *data, donnees *xmlData) {
   parser_context_t *context = data;
   if(!strcmp(tag,"author")||(!strcmp(tag,"title")&&tag_author)){
     context->close_count++;
-    //printf("CLOSE TAG %s\n", tag);
     lecture=0;
     if(!strcmp(tag,"title")){
       tag_author=0;
+      printBinaire(stdout,xmlData);
+      initStruct(xmlData);
     }
   }
 }
-
 
 int main(int argc, char **argv)
 {
   if(argc != 2) return 2;
 
   parser_context_t context = {};
+  
+
+  donnees xmlData;
+  xmlData.auteurs=malloc(STR_LEN_DEF);
+  xmlData.titre=malloc(STR_LEN_DEF);
+  xmlData.nbAuteurs=0;
 
   parser_info_t info;
   info.handleOpenTag = handleOpenTag;
@@ -85,9 +86,8 @@ int main(int argc, char **argv)
   info.data = &context;
 
   int err;
-  if(PARSER_OK != (err = parse(argv[1], &info)))
+  if(PARSER_OK != (err = parse(argv[1], &info, &xmlData)))
   {
-    printf("NB TITRES : %d\nNB AUTEURS : %d\n",nbTitre,nbAuteur);
     return err;
   }
   return 0;
