@@ -1,6 +1,8 @@
 #ifndef XMLP_HEADER
 #define XMLP_HEADER
 
+#define STR_LEN_DEF 10001
+
 typedef enum parser_error_type_t {
     PARSER_OK,
     ERROR_UNABLE_TO_OPEN_FILE,

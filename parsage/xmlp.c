@@ -13,7 +13,7 @@ parser_error_type_t parse(const char *filename, parser_info_t *info, donnees *xm
     int CptOuvrant = 0;
     int CptFermant = 0;
     char carac_buffer = (char)fgetc(entree);
-    char *data = malloc(1001);
+    char *data = malloc(STR_LEN_DEF);
     while (carac_buffer != EOF)
     {
         if (carac_buffer == '<')

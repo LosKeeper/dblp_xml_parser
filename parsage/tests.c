@@ -3,8 +3,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define STR_LEN_DEF 1000
-
 typedef struct parser_context_t {
     int text_count;
     int open_count;
@@ -18,8 +16,6 @@ int structInit=0;
 
 void printBinaire(FILE* file,donnees * data){
   fprintf(file,"%d;%s%s\n",data->nbAuteurs,data->auteurs,data->titre);
-  //fprintf(file, "\n TITRE : %s\n\n",data->titre);
-  //fprintf(file, "\n AUTEURS : %s\n\n",data->auteurs);
 }
 
 void initStruct(donnees* xmlData){
@@ -42,7 +38,6 @@ void handleText(char *txt, void *data, donnees *xmlData) {
     else if(tag_author){
       strcat(xmlData->auteurs,strcat(txt,";"));
     }
-    
   }
 }
 
@@ -63,7 +58,7 @@ void handleOpenTag(char *tag, void *data, donnees *xmlData) {
 
 void handleCloseTag(char *tag, void *data, donnees *xmlData) {
   parser_context_t *context = data;
-  if(!strcmp(tag,"author")||(!strcmp(tag,"title")&&tag_author)){
+  if(!strcmp(tag,"author")||(!strcmp(tag,"title"))){
     context->close_count++;
     lecture=0;
     if(!strcmp(tag,"title")){
