@@ -64,7 +64,9 @@ void handleCloseTag(char *tag, void *data, donnees *xmlData) {
     if(!strcmp(tag,"title")){
       tag_author=0;
       tag_title=0;
-      printBinaire(stdout,xmlData);
+      if(xmlData->nbAuteurs){
+        printBinaire(stdout,xmlData);
+      }
       initStruct(xmlData);
     }
   }
