@@ -13,10 +13,13 @@ typedef struct parser_context_t {
 
 int lecture=0;
 int tag_author=0;
+int tag_title=0;
 int structInit=0;
 
 void printBinaire(FILE* file,donnees * data){
   fprintf(file,"%d;%s%s\n",data->nbAuteurs,data->auteurs,data->titre);
+  //fprintf(file, "\n TITRE : %s\n\n",data->titre);
+  //fprintf(file, "\n AUTEURS : %s\n\n",data->auteurs);
 }
 
 void initStruct(donnees* xmlData){
@@ -33,12 +36,13 @@ void handleText(char *txt, void *data, donnees *xmlData) {
   parser_context_t *context = data;
   if(lecture){
     context->text_count++;
-    if(tag_author){
+    if(tag_title) {
+      strcat(xmlData->titre,txt);
+    }
+    else if(tag_author){
       strcat(xmlData->auteurs,strcat(txt,";"));
     }
-    else {
-      xmlData->titre=txt;
-    }
+    
   }
 }
 
@@ -51,6 +55,9 @@ void handleOpenTag(char *tag, void *data, donnees *xmlData) {
       tag_author=1;
       xmlData->nbAuteurs++;
     }
+    else {
+      tag_title=1;
+    }
   }
 }
 
@@ -61,6 +68,7 @@ void handleCloseTag(char *tag, void *data, donnees *xmlData) {
     lecture=0;
     if(!strcmp(tag,"title")){
       tag_author=0;
+      tag_title=0;
       printBinaire(stdout,xmlData);
       initStruct(xmlData);
     }
@@ -77,6 +85,8 @@ int main(int argc, char **argv)
   donnees xmlData;
   xmlData.auteurs=malloc(STR_LEN_DEF);
   xmlData.titre=malloc(STR_LEN_DEF);
+  xmlData.auteurs[0]='\0';
+  xmlData.titre[0]='\0';
   xmlData.nbAuteurs=0;
 
   parser_info_t info;
