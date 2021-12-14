@@ -12,13 +12,16 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
     int CptOuvrant = 0;
     int CptFermant = 0;
     char carac_buffer = (char)fgetc(entree);
+    char previous_carac;
     char *data = malloc(STR_LEN_DEF);
     while (carac_buffer != EOF) {
-        if (carac_buffer == '<') {
+        if (carac_buffer == '<' && previous_carac == '<') {
             CptOuvrant++;
+            previous_carac = carac_buffer;
             carac_buffer = (char)fgetc(entree);
             int it = 0;
             if (carac_buffer == '/') {
+                previous_carac = carac_buffer;
                 carac_buffer = (char)fgetc(entree);
                 while (carac_buffer != '>') {
                     if (carac_buffer == EOF) {
@@ -32,6 +35,7 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                         return PARSER_OK;
                     }
                     data[it] = carac_buffer;
+                    previous_carac = carac_buffer;
                     carac_buffer = (char)fgetc(entree);
                     it++;
                 }
@@ -52,12 +56,15 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                     }
                     if (carac_buffer == ' ') {
                         while (carac_buffer != '>') {
+                            previous_carac = carac_buffer;
                             carac_buffer = (char)fgetc(entree);
                         }
+                        previous_carac = carac_buffer;
                         carac_buffer = (char)fgetc(entree);
                         goto passe_fgetc;
                     }
                     data[it] = carac_buffer;
+                    previous_carac = carac_buffer;
                     carac_buffer = (char)fgetc(entree);
                     it++;
                 }
@@ -78,6 +85,7 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                     return PARSER_OK;
                 }
                 data[it] = carac_buffer;
+                previous_carac = carac_buffer;
                 carac_buffer = (char)fgetc(entree);
                 it++;
             }
@@ -85,6 +93,7 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
             info->handleText(data, info->data, xmlData);
             goto passe_fgetc;
         }
+        previous_carac = carac_buffer;
         carac_buffer = (char)fgetc(entree);
     passe_fgetc:;
     }
