@@ -15,12 +15,12 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
     char previous_carac;
     char *data = malloc(STR_LEN_DEF);
     while (carac_buffer != EOF) {
-        if (carac_buffer == '<' && previous_carac == '<') {
+        if (carac_buffer == '<') {
             CptOuvrant++;
             previous_carac = carac_buffer;
             carac_buffer = (char)fgetc(entree);
             int it = 0;
-            if (carac_buffer == '/') {
+            if (carac_buffer == '/' && previous_carac == '<') {
                 previous_carac = carac_buffer;
                 carac_buffer = (char)fgetc(entree);
                 while (carac_buffer != '>') {
