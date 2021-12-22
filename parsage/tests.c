@@ -18,10 +18,12 @@ void decode_html(char* encoded_str){
     char * pnt=strstr(encoded_str,"&");
     if(pnt){
         pnt[0]=pnt[1];
-        for(size_t k=1;k<strlen(pnt)-5;k++){
-            pnt[k]=pnt[k+5];
+        char * ptvirgule=strstr(encoded_str,";");
+        int n = strlen(pnt)-strlen(ptvirgule);
+        for(size_t k=1;k<strlen(pnt)-n;k++){
+            pnt[k]=ptvirgule[k];
         }
-        pnt[strlen(pnt)-5]='\0';
+        pnt[strlen(pnt)-n]='\0';
     }
 }
 
@@ -44,10 +46,10 @@ void handleText(char *txt, void *data, donnees *xmlData) {
     if (lecture) {
         context->text_count++;
         if (tag_title) {
-            decode_html(txt);
+            // decode_html(txt);
             strcat(xmlData->titre, txt);
         } else if (tag_author) {
-            decode_html(txt);
+            // decode_html(txt);
             strcat(xmlData->auteurs, strcat(txt, ";"));
         }
     }
