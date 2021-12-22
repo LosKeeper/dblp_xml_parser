@@ -14,6 +14,17 @@ int tag_author = 0;
 int tag_title = 0;
 int structInit = 0;
 
+void decode_html(char* encoded_str){
+    char * pnt=strstr(encoded_str,"&");
+    if(pnt){
+        pnt[0]=pnt[1];
+        for(size_t k=1;k<strlen(pnt)-5;k++){
+            pnt[k]=pnt[k+5];
+        }
+        pnt[strlen(pnt)-5]='\0';
+    }
+}
+
 void printBinaire(FILE *file, donnees *data) {
     fprintf(file, "%d;%s%s\n", data->nbAuteurs, data->auteurs, data->titre);
 }
@@ -33,8 +44,10 @@ void handleText(char *txt, void *data, donnees *xmlData) {
     if (lecture) {
         context->text_count++;
         if (tag_title) {
+            decode_html(txt);
             strcat(xmlData->titre, txt);
         } else if (tag_author) {
+            decode_html(txt);
             strcat(xmlData->auteurs, strcat(txt, ";"));
         }
     }
