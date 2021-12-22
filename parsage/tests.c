@@ -14,16 +14,16 @@ int tag_author = 0;
 int tag_title = 0;
 int structInit = 0;
 
-void decode_html(char* encoded_str){
-    char * pnt=strstr(encoded_str,"&");
-    if(pnt){
-        pnt[0]=pnt[1];
-        char * ptvirgule=strstr(encoded_str,";");
-        int n = strlen(pnt)-strlen(ptvirgule);
-        for(size_t k=1;k<strlen(pnt)-n;k++){
-            pnt[k]=ptvirgule[k];
+void decode_html(char *encoded_str) {
+    char *pnt = strstr(encoded_str, "&");
+    if (pnt) {
+        pnt[0] = pnt[1];
+        char *ptvirgule = strstr(encoded_str, ";");
+        int n = strlen(pnt) - strlen(ptvirgule);
+        for (size_t k = 1; k < strlen(pnt) - n; k++) {
+            pnt[k] = ptvirgule[k];
         }
-        pnt[strlen(pnt)-n]='\0';
+        pnt[strlen(pnt) - n] = '\0';
     }
 }
 
