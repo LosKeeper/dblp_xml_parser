@@ -53,7 +53,7 @@ int inverser_chaine(char* auteurs){
 */
 
 
-int co_auteurs(char * auteur1, char *auteur2){
+/**int co_auteurs(char * auteur1, char *auteur2){
     int k=0;
     FILE* fichier=NULL; 
     fichier=fopen(fichierthomas, "r+");
@@ -78,7 +78,16 @@ int co_auteurs(char * auteur1, char *auteur2){
     }
     fclose(fichier);
 }
+*/
 
 
 
 /** https://github.com/samsonmolou/dijsktra-algorithm/blob/master/main.c */
+
+
+int** construction_tableau_dijkstra(char* auteur1, char* auteur2; graphe_type* graphe){
+    FILE* fichier=NULL;
+    fichier=fopen(fichierthomas);
+    int** tableau_dijkstra[graphe_type->nb-autors];
+    if(graphe_type->matrice_adj)
+}
