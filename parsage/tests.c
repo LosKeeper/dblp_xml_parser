@@ -1,3 +1,9 @@
+/* NOTES
+
+Ne pas oublier de retirer les "Home Page"
+Ajouter for dans for pour addGraphe pour plusieurs auteurs
+
+*/
 #include "xmlp.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,9 +16,10 @@ typedef struct parser_context_t {
 } parser_context_t;
 
 typedef struct graphe_type {
-    char **list_autors;
-    int nb_autors;
-    char **list_titles;
+    char **liste_auteurs;
+    int nb_auteurs;
+    char **liste_titres;
+    int nb_titres;
     int **matrice_adj;
 } graphe_type;
 
@@ -20,6 +27,22 @@ int lecture = 0;
 int tag_author = 0;
 int tag_title = 0;
 int structInit = 0;
+
+int max(int a, int b) {
+    if (a >= b) {
+        return a;
+    } else {
+        return b;
+    }
+}
+
+int min(int a, int b) {
+    if (a <= b) {
+        return a;
+    } else {
+        return b;
+    }
+}
 
 void decode_html(char *encoded_str) {
     char *pnt = strstr(encoded_str, "&");
@@ -38,7 +61,81 @@ void printBinaire(FILE *file, donnees *data) {
     fprintf(file, "%d;%s%s\n", data->nbAuteurs, data->auteurs, data->titre);
 }
 
-void addGraphe(graphe_type *graphe, donnees *data) {}
+void addGraphe(graphe_type *graphe, donnees *data) {
+    graphe->liste_titres =
+        realloc(graphe->liste_titres, sizeof(char *) * graphe->nb_titres + 1);
+    graphe->liste_titres[graphe->nb_titres] = data->titre;
+
+    char *pnt = data->auteurs;
+    char auteur1[100];
+    strcpy(auteur1, pnt);
+    strstr(auteur1, ";")[0] = '\0';
+    pnt = strstr(pnt, ";");
+    graphe->nb_auteurs++;
+
+    int index_auteur1;
+    int auteur_existe = 0;
+    for (int k = 0; k < graphe->nb_auteurs; k++) {
+        if (!strcmp(auteur1, graphe->liste_auteurs[k])) {
+            auteur_existe = 1;
+            index_auteur1 = k;
+        }
+    }
+    if (!auteur_existe) {
+        graphe->liste_auteurs =
+            realloc(graphe->liste_auteurs, sizeof(char *) * graphe->nb_auteurs);
+        graphe->liste_auteurs[graphe->nb_auteurs - 1] = auteur1;
+        graphe->matrice_adj =
+            realloc(graphe->matrice_adj, sizeof(int *) * (graphe->nb_auteurs));
+        index_auteur1 = graphe->nb_auteurs - 1;
+        graphe->matrice_adj[index_auteur1] =
+            malloc(sizeof(int) * graphe->nb_auteurs);
+        for (int i = 0; i < index_auteur1; i++) {
+            graphe->matrice_adj[index_auteur1][i] = -1;
+        }
+    }
+
+    for (int i = 1; i < data->nbAuteurs; i++) {
+
+        // Détection des auteurs
+
+        char auteur2[100];
+        strcpy(auteur2, pnt);
+        strstr(auteur2, ";")[0] = '\0';
+        pnt = strstr(pnt, ";");
+        graphe->nb_auteurs++;
+
+        // Recherche si l'auteur existe deja
+
+        int index_auteur2;
+        int auteur_existe = 0;
+        for (int k = 0; k < graphe->nb_auteurs; k++) {
+            if (!strcmp(auteur2, graphe->liste_auteurs[k])) {
+                auteur_existe = 1;
+                index_auteur2 = k;
+            }
+        }
+        if (!auteur_existe) {
+            graphe->liste_auteurs = realloc(
+                graphe->liste_auteurs, sizeof(char *) * graphe->nb_auteurs);
+            graphe->liste_auteurs[graphe->nb_auteurs - 1] = auteur2;
+            graphe->matrice_adj = realloc(graphe->matrice_adj,
+                                          sizeof(int *) * (graphe->nb_auteurs));
+            index_auteur2 = graphe->nb_auteurs - 1;
+            graphe->matrice_adj[index_auteur2] =
+                malloc(sizeof(int) * graphe->nb_auteurs);
+            for (int i = 0; i < index_auteur2; i++) {
+                graphe->matrice_adj[index_auteur2][i] = -1;
+            }
+        }
+        graphe->matrice_adj[max(index_auteur1, index_auteur2)]
+                           [min(index_auteur1, index_auteur1)] =
+            graphe->nb_titres;
+        index_auteur1 = index_auteur2;
+        strcpy(auteur1, auteur2);
+    }
+    graphe->nb_titres++;
+}
 
 void initStruct(donnees *xmlData) {
     free(xmlData->auteurs);
@@ -55,7 +152,6 @@ void handleText(char *txt, void *data, donnees *xmlData) {
     if (lecture) {
         context->text_count++;
         if (tag_title) {
-            // decode_html(txt);
             strcat(xmlData->titre, txt);
         } else if (tag_author) {
             decode_html(txt);
