@@ -9,6 +9,13 @@ typedef struct parser_context_t {
     int close_count;
 } parser_context_t;
 
+typedef struct graphe_type {
+    char **list_autors;
+    int nb_autors;
+    char **list_titles;
+    int **matrice_adj;
+} graphe_type;
+
 int lecture = 0;
 int tag_author = 0;
 int tag_title = 0;
@@ -30,6 +37,8 @@ void decode_html(char *encoded_str) {
 void printBinaire(FILE *file, donnees *data) {
     fprintf(file, "%d;%s%s\n", data->nbAuteurs, data->auteurs, data->titre);
 }
+
+void addGraphe(graphe_type *graphe, donnees *data) {}
 
 void initStruct(donnees *xmlData) {
     free(xmlData->auteurs);
