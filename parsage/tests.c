@@ -49,7 +49,7 @@ void handleText(char *txt, void *data, donnees *xmlData) {
             // decode_html(txt);
             strcat(xmlData->titre, txt);
         } else if (tag_author) {
-            // decode_html(txt);
+            decode_html(txt);
             strcat(xmlData->auteurs, strcat(txt, ";"));
         }
     }
