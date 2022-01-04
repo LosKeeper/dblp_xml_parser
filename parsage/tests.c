@@ -1,7 +1,9 @@
 /* NOTES
 
-Ne pas oublier de retirer les "Home Page"
-Ajouter for dans for pour addGraphe pour plusieurs auteurs
+|Ne pas oublier de retirer les "Home Page"
+|Ajouter for dans for pour addGraphe pour plusieurs auteurs
+~Regler codage html
+Fichier Binaire
 
 */
 #include "xmlp.h"
@@ -46,7 +48,7 @@ int min(int a, int b) {
 
 void decode_html(char *encoded_str) {
     char *pnt = strstr(encoded_str, "&");
-    if (pnt) {
+    if (strstr(encoded_str, ";")) {
         pnt[0] = pnt[1];
         char *ptvirgule = strstr(encoded_str, ";");
         int n = strlen(pnt) - strlen(ptvirgule);
@@ -67,7 +69,7 @@ void addGraphe(graphe_type *graphe, donnees *data) {
     graphe->liste_titres[graphe->nb_titres] = data->titre;
 
     char *pnt = data->auteurs;
-    char auteur1[100];
+    char auteur1[pnt - strstr(pnt, ";")];
     strcpy(auteur1, pnt);
     strstr(auteur1, ";")[0] = '\0';
     pnt = strstr(pnt, ";");
@@ -95,44 +97,52 @@ void addGraphe(graphe_type *graphe, donnees *data) {
         }
     }
 
+    int index_auteur2;
+    char auteur2[pnt - strstr(pnt, ";")];
     for (int i = 1; i < data->nbAuteurs; i++) {
 
-        // Détection des auteurs
+        for (int j = i; j < data->nbAuteurs; j++) {
 
-        char auteur2[100];
-        strcpy(auteur2, pnt);
-        strstr(auteur2, ";")[0] = '\0';
-        pnt = strstr(pnt, ";");
-        graphe->nb_auteurs++;
+            // Détection des auteurs
 
-        // Recherche si l'auteur existe deja
+            strcpy(auteur2, pnt);
+            strstr(auteur2, ";")[0] = '\0';
+            pnt = strstr(pnt, ";");
+            graphe->nb_auteurs++;
 
-        int index_auteur2;
-        int auteur_existe = 0;
-        for (int k = 0; k < graphe->nb_auteurs; k++) {
-            if (!strcmp(auteur2, graphe->liste_auteurs[k])) {
-                auteur_existe = 1;
-                index_auteur2 = k;
+            // Recherche si l'auteur existe deja
+
+            int auteur_existe = 0;
+            for (int k = 0; k < graphe->nb_auteurs; k++) {
+                if (!strcmp(auteur2, graphe->liste_auteurs[k])) {
+                    auteur_existe = 1;
+                    index_auteur2 = k;
+                }
             }
-        }
-        if (!auteur_existe) {
-            graphe->liste_auteurs = realloc(
-                graphe->liste_auteurs, sizeof(char *) * graphe->nb_auteurs);
-            graphe->liste_auteurs[graphe->nb_auteurs - 1] = auteur2;
-            graphe->matrice_adj = realloc(graphe->matrice_adj,
-                                          sizeof(int *) * (graphe->nb_auteurs));
-            index_auteur2 = graphe->nb_auteurs - 1;
-            graphe->matrice_adj[index_auteur2] =
-                malloc(sizeof(int) * graphe->nb_auteurs);
-            for (int i = 0; i < index_auteur2; i++) {
-                graphe->matrice_adj[index_auteur2][i] = -1;
+            if (!auteur_existe) {
+                graphe->liste_auteurs = realloc(
+                    graphe->liste_auteurs, sizeof(char *) * graphe->nb_auteurs);
+                graphe->liste_auteurs[graphe->nb_auteurs - 1] = auteur2;
+                graphe->matrice_adj = realloc(
+                    graphe->matrice_adj, sizeof(int *) * (graphe->nb_auteurs));
+                index_auteur2 = graphe->nb_auteurs - 1;
+                graphe->matrice_adj[index_auteur2] =
+                    malloc(sizeof(int) * graphe->nb_auteurs);
+                for (int i = 0; i < index_auteur2; i++) {
+                    graphe->matrice_adj[index_auteur2][i] = -1;
+                }
             }
+            graphe->matrice_adj[max(index_auteur1, index_auteur2)]
+                               [min(index_auteur1, index_auteur1)] =
+                graphe->nb_titres;
+            char *auteur2 =
+                realloc(auteur2, sizeof(char) * (pnt - strstr(pnt, ";")));
         }
-        graphe->matrice_adj[max(index_auteur1, index_auteur2)]
-                           [min(index_auteur1, index_auteur1)] =
-            graphe->nb_titres;
         index_auteur1 = index_auteur2;
+        char *auteur1 = realloc(auteur1, sizeof(auteur2));
         strcpy(auteur1, auteur2);
+        char *auteur2 =
+            realloc(auteur2, sizeof(char) * (pnt - strstr(pnt, ";")));
     }
     graphe->nb_titres++;
 }
@@ -152,6 +162,7 @@ void handleText(char *txt, void *data, donnees *xmlData) {
     if (lecture) {
         context->text_count++;
         if (tag_title) {
+            // decode_html(txt);
             strcat(xmlData->titre, txt);
         } else if (tag_author) {
             decode_html(txt);
@@ -182,7 +193,7 @@ void handleCloseTag(char *tag, void *data, donnees *xmlData) {
         if (!strcmp(tag, "title")) {
             tag_author = 0;
             tag_title = 0;
-            if (xmlData->nbAuteurs) {
+            if (xmlData->nbAuteurs && strcmp(xmlData->titre, "Home Page")) {
                 printBinaire(stdout, xmlData);
             }
             initStruct(xmlData);
