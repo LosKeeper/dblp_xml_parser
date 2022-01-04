@@ -3,6 +3,15 @@
 #include <stdint.h>
 #include <string.h>
 
+
+typedef struct graphe_type {
+    char **liste_auteurs;
+    int nb_auteurs;
+    char **liste_titres;
+    int nb_titres;
+    int **matrice_adj;
+} graphe_type;
+
 int nmbre_separateur(char* string){
     int k=0;
     int somme=0;
@@ -85,9 +94,34 @@ int inverser_chaine(char* auteurs){
 /** https://github.com/samsonmolou/dijsktra-algorithm/blob/master/main.c */
 
 
-int** construction_tableau_dijkstra(char* auteur1, char* auteur2; graphe_type* graphe){
+void dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
     FILE* fichier=NULL;
     fichier=fopen(fichierthomas);
-    int** tableau_dijkstra[graphe_type->nb-autors];
-    if(graphe_type->matrice_adj)
+    int numero_auteur_un=0;
+    int numero_auteur_deux=0;
+    int k=0;
+    if(!strcmp(auteur1,auteur2)){
+        printf("C'est le même auteur\n");
+        printf("Le chemin le plus court est de 0");
+    while(k<((graphe->nb_auteurs)-1)){
+        if(graphe->liste_auteurs[k]==auteur1){
+            numero_auteur_un=k;
+            k++;
+        }
+        if(graphe->liste_auteurs[k]==auteur2){
+            numero_auteur_deux=k;
+            k++;
+        }
+    }
+    if(graphe->liste_auteurs[]){
+
+    }
+    int** tableau_dijkstra[graphe->nb_auteurs]= {0};
+    if(graphe->matrice_adj[numero_auteur_un][numero_auteur_deux]==1){
+        printf("le chemin le plus court est de 1");
+    }
+    else{
+
+    }
+
 }
