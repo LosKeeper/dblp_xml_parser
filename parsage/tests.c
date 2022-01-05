@@ -4,6 +4,7 @@
 |Ajouter for dans for pour addGraphe pour plusieurs auteurs
 ~Regler codage html
 Fichier Binaire
+Tester tous les malloc et realloc
 
 */
 #include "xmlp.h"
@@ -16,14 +17,6 @@ typedef struct parser_context_t {
     int open_count;
     int close_count;
 } parser_context_t;
-
-typedef struct graphe_type {
-    char **liste_auteurs;
-    int nb_auteurs;
-    char **liste_titres;
-    int nb_titres;
-    int **matrice_adj;
-} graphe_type;
 
 int lecture = 0;
 int tag_author = 0;
@@ -61,6 +54,28 @@ void decode_html(char *encoded_str) {
 
 void printBinaire(FILE *file, donnees *data) {
     fprintf(file, "%d;%s%s\n", data->nbAuteurs, data->auteurs, data->titre);
+}
+
+void printGraphe(graphe_type *graphe) {
+    printf("MATRICE : \n");
+    for (size_t j = 0; j < graphe->nb_auteurs; j++) {
+        for (size_t i = 0; i < graphe->nb_auteurs; i++) {
+            printf("%d  |", graphe->matrice_adj[i][j]);
+        }
+        printf("\n");
+        for (size_t k = 0; k < j; k++) {
+            printf("    |");
+        }
+    }
+    printf("\nLISTE AUTEURS : ");
+    for (int i = 0; i < graphe->nb_auteurs; i++) {
+        printf("%s;", graphe->liste_auteurs[i]);
+    }
+    printf("\nLISTE TITRES : ");
+    for (int i = 0; i < graphe->nb_titres; i++) {
+        printf("%s;", graphe->liste_titres[i]);
+    }
+    printf("\n");
 }
 
 void addGraphe(graphe_type *graphe, donnees *data) {
@@ -157,7 +172,7 @@ void initStruct(donnees *xmlData) {
     xmlData->titre[0] = '\0';
 }
 
-void handleText(char *txt, void *data, donnees *xmlData) {
+void handleText(char *txt, void *data, donnees *xmlData, graphe_type *graphe) {
     parser_context_t *context = data;
     if (lecture) {
         context->text_count++;
@@ -171,7 +186,8 @@ void handleText(char *txt, void *data, donnees *xmlData) {
     }
 }
 
-void handleOpenTag(char *tag, void *data, donnees *xmlData) {
+void handleOpenTag(char *tag, void *data, donnees *xmlData,
+                   graphe_type *graphe) {
     parser_context_t *context = data;
     if (!strcmp(tag, "author") || (!strcmp(tag, "title") && tag_author)) {
         context->open_count++;
@@ -185,7 +201,8 @@ void handleOpenTag(char *tag, void *data, donnees *xmlData) {
     }
 }
 
-void handleCloseTag(char *tag, void *data, donnees *xmlData) {
+void handleCloseTag(char *tag, void *data, donnees *xmlData,
+                    graphe_type *graphe) {
     parser_context_t *context = data;
     if (!strcmp(tag, "author") || (!strcmp(tag, "title"))) {
         context->close_count++;
@@ -195,6 +212,7 @@ void handleCloseTag(char *tag, void *data, donnees *xmlData) {
             tag_title = 0;
             if (xmlData->nbAuteurs && strcmp(xmlData->titre, "Home Page")) {
                 printBinaire(stdout, xmlData);
+                addGraphe(graphe, xmlData);
             }
             initStruct(xmlData);
         }
@@ -206,6 +224,13 @@ int main(int argc, char **argv) {
         return 2;
 
     parser_context_t context = {};
+
+    graphe_type graphe;
+    graphe.liste_auteurs = malloc(sizeof(char *) * STR_LEN_DEF);
+    graphe.liste_titres = malloc(sizeof(char *) * STR_LEN_DEF);
+    graphe.nb_auteurs = 0;
+    graphe.nb_titres = 0;
+    graphe.matrice_adj = malloc(sizeof(int *) * STR_LEN_DEF);
 
     donnees xmlData;
     xmlData.auteurs = malloc(STR_LEN_DEF);
@@ -221,7 +246,8 @@ int main(int argc, char **argv) {
     info.data = &context;
 
     int err;
-    if (PARSER_OK != (err = parse(argv[1], &info, &xmlData))) {
+    if (PARSER_OK != (err = parse(argv[1], &info, &xmlData, &graphe))) {
+        printGraphe(&graphe);
         return err;
     }
     return 0;

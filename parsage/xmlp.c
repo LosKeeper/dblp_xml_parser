@@ -4,7 +4,7 @@
 #include <string.h>
 
 parser_error_type_t parse(const char *filename, parser_info_t *info,
-                          donnees *xmlData) {
+                          donnees *xmlData, graphe_type *graphe) {
     FILE *entree = fopen(filename, "r");
     if (entree == NULL) {
         return ERROR_UNABLE_TO_OPEN_FILE;
@@ -41,7 +41,7 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                 }
                 CptFermant++;
                 data[it] = '\0';
-                info->handleCloseTag(data, info->data, xmlData);
+                info->handleCloseTag(data, info->data, xmlData, graphe);
             } else {
                 while (carac_buffer != '>') {
                     if (carac_buffer == EOF) {
@@ -70,7 +70,7 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                 }
                 CptFermant++;
                 data[it] = '\0';
-                info->handleOpenTag(data, info->data, xmlData);
+                info->handleOpenTag(data, info->data, xmlData, graphe);
             }
         } else {
             int it = 0;
@@ -90,7 +90,7 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                 it++;
             }
             data[it] = '\0';
-            info->handleText(data, info->data, xmlData);
+            info->handleText(data, info->data, xmlData, graphe);
             goto passe_fgetc;
         }
         previous_carac = carac_buffer;

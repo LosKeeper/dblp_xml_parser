@@ -15,10 +15,18 @@ typedef struct donnees {
     char *titre;
 } donnees;
 
+typedef struct graphe_type {
+    char **liste_auteurs;
+    int nb_auteurs;
+    char **liste_titres;
+    int nb_titres;
+    int **matrice_adj;
+} graphe_type;
+
 typedef struct parser_info_t {
-    void (*handleOpenTag)(char *, void *, donnees *);
-    void (*handleCloseTag)(char *, void *, donnees *);
-    void (*handleText)(char *, void *, donnees *);
+    void (*handleOpenTag)(char *, void *, donnees *, graphe_type *);
+    void (*handleCloseTag)(char *, void *, donnees *, graphe_type *);
+    void (*handleText)(char *, void *, donnees *, graphe_type *);
     void *data;
 } parser_info_t;
 
@@ -31,6 +39,6 @@ typedef struct parser_info_t {
  * @return PARSER_OK if everything went fine, an error otherwise
  */
 parser_error_type_t parse(const char *filename, parser_info_t *info,
-                          donnees *xmlData);
+                          donnees *xmlData, graphe_type *graphe);
 
 #endif
