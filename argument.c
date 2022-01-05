@@ -19,8 +19,10 @@ void print_usage(void) {
         "options:\n"
         "\t-h                      affiche l'aide\n"
         "\t-d  ARGUMENT            indique la base de donnée a ouvrir"
-        "\t-i  ARGUMENT            indique le fichier binaire a ouvrir\n"
-        "\t-o  ARGUMENT            indique le fichier binaire a sauvegarder\n"
+        "\t-i  ARGUMENT            indique le fichier binaire a ouvrir (si pas "
+        "de bases de données renseignée)\n"
+        "\t-o  ARGUMENT            indique le fichier binaire a sauvegarder "
+        "(uniquement si une base de donnée a été renseignée)\n"
         "\t-a  ARGUMENT            indique le premier auteur pour la recherche "
         "de chemin"
         "\t-b ARGUMENT            indique le second auteur pour la recherche "
@@ -48,7 +50,32 @@ void initOptions(options_t *options) {
     options->auteur2 = NULL;
 }
 
-void checkOptionsValidity(options_t *options) {}
+void checkOptionsValidity(options_t *options) {
+    if (options->input_database) {
+        if (options->input_binary) {
+            fprintf(stderr, "Too many options.\n");
+            print_usage();
+            abort();
+        }
+        if (options->output_binary) {
+            // graphe_type graphe;
+            // parsage(options->input_database,options->output_binary,graphe);
+            if (options->auteur1) {
+                if (options->auteur2) {
+                    // dijkstra(graphe,options->auteur1,options->auteur2);
+                }
+            }
+        }
+    }
+    if (options->input_binary) {
+        if (options->auteur1) {
+            if (options->auteur2) {
+                // charger_structure(options->input_binary,graphe);
+                // dijkstra(graphe,options->auteur1,options->auteur2);
+            }
+        }
+    }
+}
 
 void parseArgs(int argc, char **argv, options_t *options) {
 
