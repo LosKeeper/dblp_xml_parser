@@ -3,6 +3,7 @@
 |Ne pas oublier de retirer les "Home Page"
 |Ajouter for dans for pour addGraphe pour plusieurs auteurs
 ~Regler codage html
+~Segmentation Fault addGraphe
 Fichier Binaire
 Tester tous les malloc et realloc
 
@@ -80,15 +81,15 @@ void printGraphe(graphe_type *graphe) {
 
 void addGraphe(graphe_type *graphe, donnees *data) {
     graphe->liste_titres =
-        realloc(graphe->liste_titres, sizeof(char *) * graphe->nb_titres + 1);
+        realloc(graphe->liste_titres, sizeof(char *) * (graphe->nb_titres + 1));
+    graphe->liste_titres[graphe->nb_titres] = malloc(strlen(data->titre) + 1);
     graphe->liste_titres[graphe->nb_titres] = data->titre;
 
     char *pnt = data->auteurs;
-    char auteur1[pnt - strstr(pnt, ";")];
+    char *auteur1 = malloc(strlen(pnt) + 1);
     strcpy(auteur1, pnt);
     strstr(auteur1, ";")[0] = '\0';
     pnt = strstr(pnt, ";");
-    graphe->nb_auteurs++;
 
     int index_auteur1;
     int auteur_existe = 0;
@@ -99,21 +100,23 @@ void addGraphe(graphe_type *graphe, donnees *data) {
         }
     }
     if (!auteur_existe) {
-        graphe->liste_auteurs =
-            realloc(graphe->liste_auteurs, sizeof(char *) * graphe->nb_auteurs);
-        graphe->liste_auteurs[graphe->nb_auteurs - 1] = auteur1;
-        graphe->matrice_adj =
-            realloc(graphe->matrice_adj, sizeof(int *) * (graphe->nb_auteurs));
-        index_auteur1 = graphe->nb_auteurs - 1;
+        graphe->liste_auteurs = realloc(
+            graphe->liste_auteurs, sizeof(char *) * (graphe->nb_auteurs + 1));
+        graphe->liste_auteurs[graphe->nb_auteurs] = malloc(strlen(auteur1) + 1);
+        graphe->liste_auteurs[graphe->nb_auteurs] = auteur1;
+        graphe->matrice_adj = realloc(graphe->matrice_adj,
+                                      sizeof(int *) * (graphe->nb_auteurs + 1));
+        index_auteur1 = graphe->nb_auteurs;
         graphe->matrice_adj[index_auteur1] =
-            malloc(sizeof(int) * graphe->nb_auteurs);
+            malloc(sizeof(int) * (graphe->nb_auteurs + 1));
         for (int i = 0; i < index_auteur1; i++) {
             graphe->matrice_adj[index_auteur1][i] = -1;
         }
+        graphe->nb_auteurs++;
     }
-
+    auteur_existe = 0;
     int index_auteur2;
-    char auteur2[pnt - strstr(pnt, ";")];
+    char *auteur2 = malloc(strlen(pnt) + 1);
     for (int i = 1; i < data->nbAuteurs; i++) {
 
         for (int j = i; j < data->nbAuteurs; j++) {
@@ -123,7 +126,6 @@ void addGraphe(graphe_type *graphe, donnees *data) {
             strcpy(auteur2, pnt);
             strstr(auteur2, ";")[0] = '\0';
             pnt = strstr(pnt, ";");
-            graphe->nb_auteurs++;
 
             // Recherche si l'auteur existe deja
 
@@ -135,29 +137,35 @@ void addGraphe(graphe_type *graphe, donnees *data) {
                 }
             }
             if (!auteur_existe) {
-                graphe->liste_auteurs = realloc(
-                    graphe->liste_auteurs, sizeof(char *) * graphe->nb_auteurs);
-                graphe->liste_auteurs[graphe->nb_auteurs - 1] = auteur2;
-                graphe->matrice_adj = realloc(
-                    graphe->matrice_adj, sizeof(int *) * (graphe->nb_auteurs));
-                index_auteur2 = graphe->nb_auteurs - 1;
+                graphe->liste_auteurs =
+                    realloc(graphe->liste_auteurs,
+                            sizeof(char *) * (graphe->nb_auteurs + 1));
+                graphe->liste_auteurs[graphe->nb_auteurs] =
+                    malloc(strlen(auteur2) + 1);
+                graphe->liste_auteurs[graphe->nb_auteurs] = auteur2;
+                graphe->matrice_adj =
+                    realloc(graphe->matrice_adj,
+                            sizeof(int *) * (graphe->nb_auteurs + 1));
+                index_auteur2 = graphe->nb_auteurs;
                 graphe->matrice_adj[index_auteur2] =
-                    malloc(sizeof(int) * graphe->nb_auteurs);
+                    malloc(sizeof(int) * (graphe->nb_auteurs + 1));
                 for (int i = 0; i < index_auteur2; i++) {
                     graphe->matrice_adj[index_auteur2][i] = -1;
                 }
+                graphe->nb_auteurs++;
             }
+            auteur_existe = 0;
             graphe->matrice_adj[max(index_auteur1, index_auteur2)]
                                [min(index_auteur1, index_auteur1)] =
                 graphe->nb_titres;
+
             char *auteur2 =
-                realloc(auteur2, sizeof(char) * (pnt - strstr(pnt, ";")));
+                realloc(auteur2, sizeof(char) * (strlen(auteur2) + 1));
         }
         index_auteur1 = index_auteur2;
-        char *auteur1 = realloc(auteur1, sizeof(auteur2));
+        char *auteur1 = realloc(auteur1, strlen(auteur2) + 1);
         strcpy(auteur1, auteur2);
-        char *auteur2 =
-            realloc(auteur2, sizeof(char) * (pnt - strstr(pnt, ";")));
+        char *auteur2 = realloc(auteur2, sizeof(char) * (strlen(auteur2) + 1));
     }
     graphe->nb_titres++;
 }
