@@ -83,11 +83,11 @@ void addGraphe(graphe_type *graphe, donnees *data) {
     graphe->liste_titres[graphe->nb_titres] = malloc(strlen(data->titre) + 1);
     graphe->liste_titres[graphe->nb_titres] = data->titre;
 
-    char *pnt = data->auteurs;
-    char *auteur1 = malloc(strlen(pnt) + 1);
-    strcpy(auteur1, pnt);
+    char *pnt1 = data->auteurs;
+    char *auteur1 = malloc(strlen(pnt1) + 1);
+    strcpy(auteur1, pnt1);
     strstr(auteur1, ";")[0] = '\0';
-    pnt = strstr(pnt + 1, ";") + 1;
+    pnt1 = strstr(pnt1 + 1, ";") + 1;
 
     int index_auteur1;
     int auteur_existe = 0;
@@ -114,9 +114,10 @@ void addGraphe(graphe_type *graphe, donnees *data) {
     }
     auteur_existe = 0;
     int index_auteur2;
-    char *auteur2 = malloc(strlen(pnt) + 1);
+    char *auteur2 = malloc(strlen(pnt1) + 1);
     for (int i = 1; i < data->nbAuteurs; i++) {
-
+        char *pnt = malloc(strlen(pnt1) + 1);
+        strcpy(pnt, pnt1);
         for (int j = i; j < data->nbAuteurs; j++) {
 
             // Détection des auteurs
@@ -161,6 +162,7 @@ void addGraphe(graphe_type *graphe, donnees *data) {
         // char *auteur1 = realloc(auteur1, strlen(auteur2) + 2);
         strcpy(auteur1, auteur2);
         auteur1[strlen(auteur2)] = '\0';
+        pnt1 = strstr(pnt1, ";") + 1;
         // char *auteur2 = realloc(auteur2, sizeof(char) * (strlen(auteur2) +
         // 1));
     }
