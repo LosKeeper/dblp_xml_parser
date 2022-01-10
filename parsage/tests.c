@@ -2,10 +2,10 @@
 
 |Ne pas oublier de retirer les "Home Page"
 |Ajouter for dans for pour addGraphe pour plusieurs auteurs
-~Regler codage html
-~Segmentation Fault addGraphe decallage i et j dans la matrice
-Fichier Binaire
-Tester tous les malloc et realloc
+|Regler codage html
+~addGraphe matrice_adj avec valeurs bizarres qui fonctionne mais regarder
+uniquement trig inférieur
+Fichier Binaire Tester tous les malloc et realloc
 
 */
 #include "xmlp.h"
@@ -77,6 +77,9 @@ void printGraphe(graphe_type *graphe) {
 }
 
 void addGraphe(graphe_type *graphe, donnees *data) {
+    if (data->nbAuteurs <= 1) {
+        goto no_add_graphe;
+    }
     graphe->liste_titres =
         realloc(graphe->liste_titres, sizeof(char *) * (graphe->nb_titres + 1));
     graphe->liste_titres[graphe->nb_titres] = malloc(strlen(data->titre));
@@ -164,10 +167,12 @@ void addGraphe(graphe_type *graphe, donnees *data) {
             graphe->matrice_adj[max(index_auteur1, index_auteur2)]
                                [min(index_auteur1, index_auteur2)] =
                 graphe->nb_titres;
+            printf("|%d|", graphe->nb_titres);
         }
         auteur1_existe = 0;
     }
     graphe->nb_titres++;
+no_add_graphe:;
 }
 
 void initStruct(donnees *xmlData) {
