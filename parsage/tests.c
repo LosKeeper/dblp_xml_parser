@@ -2,11 +2,14 @@
 
 |Ne pas oublier de retirer les "Home Page"
 |Ajouter for dans for pour addGraphe pour plusieurs auteurs
-|Regler codage html
+~Regler codage html SUR LES TITRES !!!
 ~addGraphe matrice_adj avec valeurs bizarres qui fonctionne mais regarder
 uniquement trig inférieur
 Fichier Binaire Tester tous les malloc et realloc
 
+QUESTIONS
+Pourquoi valgrind OK et pas en mode normal ?
+Possibilité de stocker au choix des shorts ou bien des int (les deux en m tps)
 */
 #include "xmlp.h"
 #include <stdio.h>
@@ -60,7 +63,7 @@ void printBinaire(FILE *file, donnees *data) {
 void printGraphe(graphe_type *graphe) {
     printf("MATRICE : \n");
     for (size_t i = 0; i < graphe->nb_auteurs; i++) {
-        for (size_t j = 0; j < graphe->nb_auteurs; j++) {
+        for (size_t j = 0; j <= i; j++) {
             printf("%d  |", graphe->matrice_adj[i][j]);
         }
         printf("\n");
@@ -167,7 +170,6 @@ void addGraphe(graphe_type *graphe, donnees *data) {
             graphe->matrice_adj[max(index_auteur1, index_auteur2)]
                                [min(index_auteur1, index_auteur2)] =
                 graphe->nb_titres;
-            printf("|%d|", graphe->nb_titres);
         }
         auteur1_existe = 0;
     }
@@ -224,8 +226,9 @@ void handleCloseTag(char *tag, void *data, donnees *xmlData,
             tag_author = 0;
             tag_title = 0;
             if (xmlData->nbAuteurs && strcmp(xmlData->titre, "Home Page")) {
-                printBinaire(stdout, xmlData);
+                // printBinaire(stdout, xmlData);
                 addGraphe(graphe, xmlData);
+                printGraphe(graphe);
             }
             initStruct(xmlData);
         }
