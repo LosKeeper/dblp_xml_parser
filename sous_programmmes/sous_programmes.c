@@ -4,13 +4,7 @@
 #include <string.h>
 
 
-typedef struct graphe_type {
-    char **liste_auteurs;
-    int nb_auteurs;
-    char **liste_titres;
-    int nb_titres;
-    int **matrice_adj;
-} graphe_type;
+
 
 int nmbre_separateur(char* string){
     int k=0;
@@ -92,6 +86,19 @@ int inverser_chaine(char* auteurs){
 
 
 /** https://github.com/samsonmolou/dijsktra-algorithm/blob/master/main.c */
+
+typedef struct graphe_type {
+    char **liste_auteurs;
+    int nb_auteurs;
+    char **liste_titres;
+    int nb_titres;
+    int **matrice_adj;
+} graphe_type;
+
+void est_ce_auteur_deux(char* auteur_precedent, char* auteur2, graphe_type* graphe){
+    if(graphe->matrice_adj[][]==1)
+}
+
 
 
 void dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
