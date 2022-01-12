@@ -3,6 +3,8 @@
 
 #define STR_LEN_DEF 7000
 
+typedef unsigned int uint;
+
 typedef enum parser_error_type_t {
     PARSER_OK,
     ERROR_UNABLE_TO_OPEN_FILE,
@@ -20,7 +22,8 @@ typedef struct graphe_type {
     int nb_auteurs;
     char **liste_titres;
     int nb_titres;
-    int **matrice_adj;
+    uint **liste_sucesseurs;
+    uint *liste_nb_liens;
 } graphe_type;
 
 typedef struct parser_info_t {

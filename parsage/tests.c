@@ -2,14 +2,11 @@
 
 |Ne pas oublier de retirer les "Home Page"
 |Ajouter for dans for pour addGraphe pour plusieurs auteurs
-|Regler codage html SUR LES TITRES !!!
-~addGraphe matrice_adj avec valeurs bizarres qui fonctionne mais regarder
-uniquement trig inférieur
-Fichier Binaire Tester tous les malloc et realloc
+~Finir liste_succ
+Fichier Binaire
+Tester tous les malloc et realloc
+Seg Fault decode_html
 
-QUESTIONS
-Pourquoi valgrind OK et pas en mode normal ?
-Possibilité de stocker au choix des shorts ou bien des int (les deux en m tps)
 */
 #include "xmlp.h"
 #include <stdio.h>
@@ -61,12 +58,12 @@ void printBinaire(FILE *file, donnees *data) {
 }
 
 void printGraphe(graphe_type *graphe) {
-    printf("MATRICE : \n");
+    printf("LISTE SUCC : \n");
     for (size_t i = 0; i < graphe->nb_auteurs; i++) {
-        for (size_t j = 0; j <= i; j++) {
-            printf("%d  |", graphe->matrice_adj[i][j]);
+        for (size_t j = 0; j < graphe->liste_nb_liens[i]; j++) {
+            printf("%d|", graphe->liste_sucesseurs[i][j]);
         }
-        printf("\n");
+        printf(";");
     }
     printf("\nLISTE AUTEURS : ");
     for (int i = 0; i < graphe->nb_auteurs; i++) {
@@ -83,7 +80,7 @@ void addGraphe(graphe_type *graphe, donnees *data) {
     if (data->nbAuteurs < 2) {
         goto no_add_graphe;
     }
-    decode_html(data->titre);
+    // decode_html(data->titre);
     graphe->liste_titres =
         realloc(graphe->liste_titres, sizeof(char *) * (graphe->nb_titres + 1));
     graphe->liste_titres[graphe->nb_titres] = malloc(strlen(data->titre) + 1);
@@ -127,15 +124,20 @@ void addGraphe(graphe_type *graphe, donnees *data) {
                 malloc(strlen(liste_auteurs_a_traiter[i]) + 1);
             graphe->liste_auteurs[graphe->nb_auteurs] =
                 liste_auteurs_a_traiter[i];
-            graphe->matrice_adj = realloc(
-                graphe->matrice_adj, sizeof(int *) * (graphe->nb_auteurs + 1));
+            graphe->liste_sucesseurs =
+                realloc(graphe->liste_sucesseurs,
+                        sizeof(uint *) * (graphe->nb_auteurs + 1));
             index_auteur1 = graphe->nb_auteurs;
-            graphe->matrice_adj[index_auteur1] =
-                malloc(sizeof(int) * (graphe->nb_auteurs + 1));
+            graphe->liste_sucesseurs[index_auteur1] = malloc(sizeof(uint *));
+            graphe->liste_nb_liens =
+                realloc(graphe->liste_nb_liens,
+                        sizeof(uint *) * (graphe->nb_auteurs + 1));
+            graphe->liste_nb_liens[index_auteur1] = 0;
             graphe->nb_auteurs++;
-            for (int l = 0; l < graphe->nb_auteurs; l++) {
-                graphe->matrice_adj[index_auteur1][l] = -1;
-            }
+        } else {
+            graphe->liste_sucesseurs[index_auteur1] = realloc(
+                graphe->liste_sucesseurs[index_auteur1],
+                sizeof(uint *) * (graphe->liste_nb_liens[index_auteur1] + 1));
         }
         for (int j = i + 1; j < nb_auteurs_a_traiter; j++) {
 
@@ -155,21 +157,31 @@ void addGraphe(graphe_type *graphe, donnees *data) {
                     malloc(strlen(liste_auteurs_a_traiter[j]) + 1);
                 graphe->liste_auteurs[graphe->nb_auteurs] =
                     liste_auteurs_a_traiter[j];
-                graphe->matrice_adj =
-                    realloc(graphe->matrice_adj,
-                            sizeof(int *) * (graphe->nb_auteurs + 1));
+                graphe->liste_sucesseurs =
+                    realloc(graphe->liste_sucesseurs,
+                            sizeof(uint *) * (graphe->nb_auteurs + 1));
                 index_auteur2 = graphe->nb_auteurs;
-                graphe->matrice_adj[index_auteur2] =
-                    malloc(sizeof(int) * (graphe->nb_auteurs + 1));
+                graphe->liste_sucesseurs[index_auteur2] =
+                    malloc(sizeof(uint *));
+                graphe->liste_nb_liens =
+                    realloc(graphe->liste_nb_liens,
+                            sizeof(uint *) * (graphe->nb_auteurs + 1));
+                graphe->liste_nb_liens[index_auteur2] = 0;
                 graphe->nb_auteurs++;
-                for (int l = 0; l < graphe->nb_auteurs; l++) {
-                    graphe->matrice_adj[index_auteur2][l] = -1;
-                }
+            } else {
+                graphe->liste_sucesseurs[index_auteur2] = realloc(
+                    graphe->liste_sucesseurs[index_auteur2],
+                    sizeof(uint) * (graphe->liste_nb_liens[index_auteur2] + 1));
             }
             auteur2_existe = 0;
-            graphe->matrice_adj[max(index_auteur1, index_auteur2)]
-                               [min(index_auteur1, index_auteur2)] =
-                graphe->nb_titres;
+            graphe->liste_sucesseurs[index_auteur1]
+                                    [graphe->liste_nb_liens[index_auteur1]] =
+                index_auteur2;
+            graphe->liste_nb_liens[index_auteur1]++;
+            graphe->liste_sucesseurs[index_auteur2]
+                                    [graphe->liste_nb_liens[index_auteur2]] =
+                index_auteur1;
+            graphe->liste_nb_liens[index_auteur2]++;
         }
         auteur1_existe = 0;
     }
@@ -243,7 +255,8 @@ int main(int argc, char **argv) {
     graphe.liste_titres = malloc(sizeof(char *) * STR_LEN_DEF);
     graphe.nb_auteurs = 0;
     graphe.nb_titres = 0;
-    graphe.matrice_adj = malloc(sizeof(int *) * STR_LEN_DEF);
+    graphe.liste_sucesseurs = malloc(sizeof(int *) * STR_LEN_DEF);
+    graphe.liste_nb_liens = malloc(sizeof(int) * STR_LEN_DEF);
 
     donnees xmlData;
     xmlData.auteurs = malloc(STR_LEN_DEF);
