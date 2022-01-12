@@ -1,7 +1,7 @@
 CC ?= gcc
 CFLAGS ?= -Wall
 
-tests : tests.o xmlp.o
+tests : tests.o xmlp.o 
 	$(CC) $(CFLAGS) -o tests tests.o xmlp.o -g
 
 xmlp.o : xmlp.h xmlp.c

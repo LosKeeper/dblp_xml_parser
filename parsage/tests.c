@@ -2,7 +2,7 @@
 
 |Ne pas oublier de retirer les "Home Page"
 |Ajouter for dans for pour addGraphe pour plusieurs auteurs
-~Regler codage html SUR LES TITRES !!!
+|Regler codage html SUR LES TITRES !!!
 ~addGraphe matrice_adj avec valeurs bizarres qui fonctionne mais regarder
 uniquement trig inférieur
 Fichier Binaire Tester tous les malloc et realloc
@@ -45,7 +45,7 @@ int min(int a, int b) {
 
 void decode_html(char *encoded_str) {
     char *pnt = strstr(encoded_str, "&");
-    if (strstr(encoded_str, ";")) {
+    while (strstr(encoded_str, ";")) {
         pnt[0] = pnt[1];
         char *ptvirgule = strstr(encoded_str, ";");
         int n = strlen(pnt) - strlen(ptvirgule);
@@ -80,31 +80,31 @@ void printGraphe(graphe_type *graphe) {
 }
 
 void addGraphe(graphe_type *graphe, donnees *data) {
-    if (data->nbAuteurs <= 1) {
+    if (data->nbAuteurs < 2) {
         goto no_add_graphe;
     }
+    decode_html(data->titre);
     graphe->liste_titres =
         realloc(graphe->liste_titres, sizeof(char *) * (graphe->nb_titres + 1));
-    graphe->liste_titres[graphe->nb_titres] = malloc(strlen(data->titre));
+    graphe->liste_titres[graphe->nb_titres] = malloc(strlen(data->titre) + 1);
     strcpy(graphe->liste_titres[graphe->nb_titres], data->titre);
 
     // Création d'une liste des auteurs a traiter (verifier si pas d'auteur
     // alors erreur)
-    char **liste_auteurs_a_traiter =
-        malloc(sizeof(char *) * graphe->nb_auteurs);
+    char **liste_auteurs_a_traiter = malloc(sizeof(char *) * data->nbAuteurs);
     char *pointeur = data->auteurs;
     for (int i = 0; i < data->nbAuteurs; i++) {
         char *buffer = malloc(strlen(pointeur) + 1);
         strcpy(buffer, pointeur);
         strstr(buffer, ";")[0] = '\0';
         liste_auteurs_a_traiter[i] = malloc(strlen(buffer) + 1);
-        for (int j = 0; j < strlen(buffer); j++) {
+        for (int j = 0; j < strlen(buffer) + 1; j++) {
             liste_auteurs_a_traiter[i][j] = buffer[j];
         }
-        liste_auteurs_a_traiter[i][strlen(buffer)] = '\0';
         free(buffer);
         pointeur = strstr(pointeur, ";") + 1;
     }
+
     int nb_auteurs_a_traiter = data->nbAuteurs;
     size_t index_auteur1;
     short auteur1_existe = 0;
@@ -192,7 +192,6 @@ void handleText(char *txt, void *data, donnees *xmlData, graphe_type *graphe) {
     if (lecture) {
         context->text_count++;
         if (tag_title) {
-            // decode_html(txt);
             strcat(xmlData->titre, txt);
         } else if (tag_author) {
             decode_html(txt);
@@ -226,9 +225,7 @@ void handleCloseTag(char *tag, void *data, donnees *xmlData,
             tag_author = 0;
             tag_title = 0;
             if (xmlData->nbAuteurs && strcmp(xmlData->titre, "Home Page")) {
-                // printBinaire(stdout, xmlData);
                 addGraphe(graphe, xmlData);
-                printGraphe(graphe);
             }
             initStruct(xmlData);
         }
