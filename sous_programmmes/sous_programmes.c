@@ -95,13 +95,18 @@ typedef struct graphe_type {
     int **matrice_adj;
 } graphe_type;
 
-void est_ce_auteur_deux(char* auteur_precedent, char* auteur2, graphe_type* graphe){
-    if(graphe->matrice_adj[][]==1)
+void arriver(char* auteur1, char* auteur2, graphe_type* graphe, char* numero_auteur_precedent, char* numero_auteur_deux){
+    if(graphe->matrice_adj[numero_auteur_deux][numero_auteur_precedent]==1){
+        printf("On a atteint l'auteur voulu\n");
+        return 1;
+    }
+    else{
+        return 0;
+    }
 }
 
 
-
-void dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
+int dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
     FILE* fichier=NULL;
     fichier=fopen(fichierthomas);
     int numero_auteur_un=0;
@@ -113,6 +118,8 @@ void dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
     if(!strcmp(auteur1,auteur2)){
         printf("C'est le même auteur\n");
         printf("Le chemin le plus court est de 0");
+        return 1;
+    }
     while(k<((graphe->nb_auteurs)-1)){
         if(graphe->liste_auteurs[k]==auteur1){
             numero_auteur_un=k;
@@ -126,24 +133,21 @@ void dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
             k++;
         }
     for(q=0; q<((graphe->nb_auteurs)-1); q++){
-        if(graphe->matrice_adj[q][numero_auteur_un]==1){
+        if(graphe->matrice_adj[numero_auteur_un][q]==1){
             somme_un++;
-            break;
         }
-        if(graphe->matrice_adj[q][numero_auteur_deux]==1){
+        else if(graphe->matrice_adj[numero_auteur_deux][q]==1){
             somme_deux++;
-            break;
-        }
-        else{
-            continue;
         }
     if(somme_un==0 || somme_deux==0){
         printf("L'un des deux auteurs n'a co-écrit aucun récit\n");
         printf("Le chemin le plus court est de 0 (chemin impossible entre les auteurs)");
+        return 0;
     }
     }
-    if(graphe->matrice_adj[numero_auteur_un][numero_auteur_deux]==1){
+    if(graphe->matrice_adj[numero_auteur_deux][numero_auteur_un]==1){
     printf("le chemin le plus court est de 1 (chemin direct d'un auteur à l'autre)");
+    return arriver;
     }
-    int** tableau_dijkstra[graphe->nb_auteurs]= {0};
- 
+    int** tableau_dijkstra=malloc(graphe->nb_auteurs);
+    } 
