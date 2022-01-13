@@ -9,6 +9,7 @@ Seg Fault decode_html
 
 */
 #include "xmlp.h"
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,6 +41,15 @@ int min(int a, int b) {
     }
 }
 
+void printAvancement(FILE *entree, long int taille_fichier) {
+    long int pos = ftell(entree);
+    double ratio = (double)pos / (double)taille_fichier;
+    ratio *= 100;
+    if ((int)ratio % 10 == 0){
+        printf("%.f%%\n", ratio);
+     } 
+}
+
 void decode_html(char *encoded_str) {
     char *pnt = strstr(encoded_str, "&");
     while (strstr(encoded_str, ";")) {
@@ -61,7 +71,7 @@ void printGraphe(graphe_type *graphe) {
     printf("LISTE SUCC : \n");
     for (size_t i = 0; i < graphe->nb_auteurs; i++) {
         for (size_t j = 0; j < graphe->liste_nb_liens[i]; j++) {
-            printf("%d|", graphe->liste_sucesseurs[i][j]);
+            printf("%ld|", graphe->liste_sucesseurs[i][j]);
         }
         printf(";");
     }
@@ -78,8 +88,9 @@ void printGraphe(graphe_type *graphe) {
 
 void addGraphe(graphe_type *graphe, donnees *data) {
     if (data->nbAuteurs < 2) {
-        goto no_add_graphe;
+        goto fin_fct;
     }
+
     // decode_html(data->titre);
     graphe->liste_titres =
         realloc(graphe->liste_titres, sizeof(char *) * (graphe->nb_titres + 1));
@@ -104,9 +115,9 @@ void addGraphe(graphe_type *graphe, donnees *data) {
 
     int nb_auteurs_a_traiter = data->nbAuteurs;
     size_t index_auteur1;
-    short auteur1_existe = 0;
+    char auteur1_existe = 0;
     size_t index_auteur2;
-    short auteur2_existe = 0;
+    char auteur2_existe = 0;
     for (int i = 0; i < nb_auteurs_a_traiter; i++) {
 
         // Recherche si auteur 1 existe deja
@@ -126,18 +137,19 @@ void addGraphe(graphe_type *graphe, donnees *data) {
                 liste_auteurs_a_traiter[i];
             graphe->liste_sucesseurs =
                 realloc(graphe->liste_sucesseurs,
-                        sizeof(uint *) * (graphe->nb_auteurs + 1));
+                        sizeof(size_t *) * (graphe->nb_auteurs + 1));
             index_auteur1 = graphe->nb_auteurs;
-            graphe->liste_sucesseurs[index_auteur1] = malloc(sizeof(uint *));
+            graphe->liste_sucesseurs[index_auteur1] =
+                malloc(sizeof(size_t) * 128);
             graphe->liste_nb_liens =
                 realloc(graphe->liste_nb_liens,
-                        sizeof(uint *) * (graphe->nb_auteurs + 1));
+                        sizeof(size_t) * (graphe->nb_auteurs + 1));
             graphe->liste_nb_liens[index_auteur1] = 0;
             graphe->nb_auteurs++;
         } else {
             graphe->liste_sucesseurs[index_auteur1] = realloc(
                 graphe->liste_sucesseurs[index_auteur1],
-                sizeof(uint *) * (graphe->liste_nb_liens[index_auteur1] + 1));
+                sizeof(size_t) * (graphe->liste_nb_liens[index_auteur1] + 127));
         }
         for (int j = i + 1; j < nb_auteurs_a_traiter; j++) {
 
@@ -159,19 +171,20 @@ void addGraphe(graphe_type *graphe, donnees *data) {
                     liste_auteurs_a_traiter[j];
                 graphe->liste_sucesseurs =
                     realloc(graphe->liste_sucesseurs,
-                            sizeof(uint *) * (graphe->nb_auteurs + 1));
+                            sizeof(size_t *) * (graphe->nb_auteurs + 1));
                 index_auteur2 = graphe->nb_auteurs;
                 graphe->liste_sucesseurs[index_auteur2] =
-                    malloc(sizeof(uint *));
+                    malloc(sizeof(size_t) * 128);
                 graphe->liste_nb_liens =
                     realloc(graphe->liste_nb_liens,
-                            sizeof(uint *) * (graphe->nb_auteurs + 1));
+                            sizeof(size_t) * (graphe->nb_auteurs + 1));
                 graphe->liste_nb_liens[index_auteur2] = 0;
                 graphe->nb_auteurs++;
             } else {
-                graphe->liste_sucesseurs[index_auteur2] = realloc(
-                    graphe->liste_sucesseurs[index_auteur2],
-                    sizeof(uint) * (graphe->liste_nb_liens[index_auteur2] + 1));
+                graphe->liste_sucesseurs[index_auteur2] =
+                    realloc(graphe->liste_sucesseurs[index_auteur2],
+                            sizeof(size_t) *
+                                (graphe->liste_nb_liens[index_auteur2] + 127));
             }
             auteur2_existe = 0;
             graphe->liste_sucesseurs[index_auteur1]
@@ -186,7 +199,7 @@ void addGraphe(graphe_type *graphe, donnees *data) {
         auteur1_existe = 0;
     }
     graphe->nb_titres++;
-no_add_graphe:;
+fin_fct:;
 }
 
 void initStruct(donnees *xmlData) {
@@ -228,7 +241,8 @@ void handleOpenTag(char *tag, void *data, donnees *xmlData,
 }
 
 void handleCloseTag(char *tag, void *data, donnees *xmlData,
-                    graphe_type *graphe) {
+                    graphe_type *graphe, FILE *entree,
+                    long int taille_fichier) {
     parser_context_t *context = data;
     if (!strcmp(tag, "author") || (!strcmp(tag, "title"))) {
         context->close_count++;
@@ -238,6 +252,7 @@ void handleCloseTag(char *tag, void *data, donnees *xmlData,
             tag_title = 0;
             if (xmlData->nbAuteurs && strcmp(xmlData->titre, "Home Page")) {
                 addGraphe(graphe, xmlData);
+                printAvancement(entree, taille_fichier);
             }
             initStruct(xmlData);
         }

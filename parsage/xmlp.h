@@ -1,10 +1,8 @@
 #ifndef XMLP_HEADER
 #define XMLP_HEADER
 
-#define STR_LEN_DEF 7000
-
-typedef unsigned int uint;
-
+#define STR_LEN_DEF 10000
+#include <stdio.h>
 typedef enum parser_error_type_t {
     PARSER_OK,
     ERROR_UNABLE_TO_OPEN_FILE,
@@ -22,13 +20,14 @@ typedef struct graphe_type {
     int nb_auteurs;
     char **liste_titres;
     int nb_titres;
-    uint **liste_sucesseurs;
-    uint *liste_nb_liens;
+    size_t **liste_sucesseurs;
+    size_t *liste_nb_liens;
 } graphe_type;
 
 typedef struct parser_info_t {
     void (*handleOpenTag)(char *, void *, donnees *, graphe_type *);
-    void (*handleCloseTag)(char *, void *, donnees *, graphe_type *);
+    void (*handleCloseTag)(char *, void *, donnees *, graphe_type *, FILE *,
+                           long int);
     void (*handleText)(char *, void *, donnees *, graphe_type *);
     void *data;
 } parser_info_t;

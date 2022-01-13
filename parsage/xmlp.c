@@ -6,6 +6,9 @@
 parser_error_type_t parse(const char *filename, parser_info_t *info,
                           donnees *xmlData, graphe_type *graphe) {
     FILE *entree = fopen(filename, "r");
+    fseek(entree, 0, SEEK_END);
+    long int taille_fichier = ftell(entree);
+    fseek(entree, 0, SEEK_SET);
     if (entree == NULL) {
         return ERROR_UNABLE_TO_OPEN_FILE;
     }
@@ -41,7 +44,8 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                 }
                 CptFermant++;
                 data[it] = '\0';
-                info->handleCloseTag(data, info->data, xmlData, graphe);
+                info->handleCloseTag(data, info->data, xmlData, graphe, entree,
+                                     taille_fichier);
             } else {
                 while (carac_buffer != '>') {
                     if (carac_buffer == EOF) {
