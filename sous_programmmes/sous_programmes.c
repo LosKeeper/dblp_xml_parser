@@ -4,36 +4,32 @@
 #include <string.h>
 
 
+typedef struct graphe_type {
+    char **liste_auteurs;
+    int nb_auteurs;
+    char **liste_titres;
+    int nb_titres;
+    size_t **liste_sucesseurs;
+    size_t *liste_nb_liens;
+} graphe_type;
 
 
-int nmbre_separateur(char* string){
+void nmbre_separateur_a_sauter(int R, graphe_type* graphe){
     int k=0;
     int somme=0;
-    FILE* fichier=NULL;
-    fichier=fopen(fichierthomas, "r+");
-    char buffer[1000];
-    fgets(buffer,1000,fichier);
-    while(string[k]!='\0'){
-        if(string[k]==';'){
+    while(somme!=R){
+        if(graphe->liste_sucesseurs[k]==';'){
             somme++;
             k++;
         }
         else{
+            graphe->liste_sucesseurs[k]==graphe->liste_sucesseurs[k+1];
             k++;
         }
     }
 
 }
 
-int nombres_comparaisons_a_realiser(){
-    int k;
-    int somme=nmbre_separateur(fichierthomas);
-    int nombre_comparaisons=0;
-    for(k=1; k<somme-1;k++){
-        nombre_comparaisons+=k;
-    }
-    return nombre_comparaisons;
-}
 
 /**
 int inverser_chaine(char* auteurs){
@@ -87,16 +83,10 @@ int inverser_chaine(char* auteurs){
 
 /** https://github.com/samsonmolou/dijsktra-algorithm/blob/master/main.c */
 
-typedef struct graphe_type {
-    char **liste_auteurs;
-    int nb_auteurs;
-    char **liste_titres;
-    int nb_titres;
-    int **matrice_adj;
-} graphe_type;
+
 
 void arriver(char* auteur1, char* auteur2, graphe_type* graphe, char* numero_auteur_precedent, char* numero_auteur_deux){
-    if(graphe->matrice_adj[numero_auteur_deux][numero_auteur_precedent]==1){
+    if(graphe->liste_sucesseurs[]==1){
         printf("On a atteint l'auteur voulu\n");
         return 1;
     }
