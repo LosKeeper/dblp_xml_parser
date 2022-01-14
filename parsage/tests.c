@@ -56,24 +56,28 @@ void printAvancement(FILE *entree, long int taille_fichier) {
     printf("%.2f%%\n", ratio);
 }
 
-size_t *index_auteur(char **liste_auteurs, size_t nb_auteurs,
-                     graphe_type *graphe) {
-    size_t *liste_index_auteurs = malloc(sizeof(size_t) * nb_auteurs);
+void indexation_auteur(char **liste_auteurs, size_t nb_auteurs,
+                       graphe_type *graphe, size_t *liste_index_auteurs) {
     for (size_t k = 0; k < nb_auteurs; k++) {
         unsigned short h = hache(liste_auteurs[k]);
-        if (graphe->hachage_auteurs[h]) {
+        if (graphe->nb_auteurs_hache[h]) {
             for (size_t i = 0; i < graphe->nb_auteurs_hache[h]; i++) {
-                if (!strcmp(
-                        liste_auteurs[k],
-                        graphe->liste_auteurs[graphe->hachage_auteurs[h][i]])) {
-                    liste_index_auteurs[k] = graphe->hachage_auteurs[h][i];
+                size_t index = graphe->hachage_auteurs[h][i];
+                if (!strcmp(liste_auteurs[k], graphe->liste_auteurs[index])) {
+                    liste_index_auteurs[k] = index;
                 } else {
                     liste_index_auteurs[k] = 0;
                 }
             }
+        } else {
+            graphe->hachage_auteurs[h] =
+                realloc(graphe->hachage_auteurs[h],
+                        sizeof(size_t) * (graphe->nb_auteurs_hache[h] + 1));
+            graphe->hachage_auteurs[h][0] = graphe->nb_auteurs;
+            graphe->nb_auteurs_hache[h]++;
+            liste_index_auteurs[k] = 0;
         }
     }
-    return liste_index_auteurs;
 }
 
 void decode_html(char *encoded_str) {
@@ -113,9 +117,6 @@ void printGraphe(graphe_type *graphe) {
 }
 
 void addGraphe(graphe_type *graphe, donnees *data) {
-    if (data->nbAuteurs < 2) {
-        goto fin_fct;
-    }
 
     // decode_html(data->titre);
     graphe->liste_titres =
@@ -140,6 +141,74 @@ void addGraphe(graphe_type *graphe, donnees *data) {
     }
 
     int nb_auteurs_a_traiter = data->nbAuteurs;
+    size_t *index_auteurs = malloc(sizeof(size_t) * nb_auteurs_a_traiter);
+    indexation_auteur(liste_auteurs_a_traiter, nb_auteurs_a_traiter, graphe,
+                      index_auteurs);
+
+    for (int i = 0; i < nb_auteurs_a_traiter; i++) {
+        size_t index_auteur1 = index_auteurs[i];
+        if (index_auteur1 == 0) {
+            graphe->liste_auteurs =
+                realloc(graphe->liste_auteurs,
+                        sizeof(char *) * (graphe->nb_auteurs + 1));
+            graphe->liste_auteurs[graphe->nb_auteurs] =
+                malloc(strlen(liste_auteurs_a_traiter[i]) + 1);
+            graphe->liste_auteurs[graphe->nb_auteurs] =
+                liste_auteurs_a_traiter[i];
+            graphe->liste_sucesseurs =
+                realloc(graphe->liste_sucesseurs,
+                        sizeof(size_t *) * (graphe->nb_auteurs + 1));
+            index_auteur1 = graphe->nb_auteurs;
+            graphe->liste_sucesseurs[index_auteur1] =
+                malloc(sizeof(size_t) * 128);
+            graphe->liste_nb_liens =
+                realloc(graphe->liste_nb_liens,
+                        sizeof(size_t) * (graphe->nb_auteurs + 1));
+            graphe->liste_nb_liens[index_auteur1] = 0;
+            graphe->nb_auteurs++;
+        } else {
+            graphe->liste_sucesseurs[index_auteur1] = realloc(
+                graphe->liste_sucesseurs[index_auteur1],
+                sizeof(size_t) * (graphe->liste_nb_liens[index_auteur1] + 127));
+        }
+        for (int j = i + 1; j < nb_auteurs_a_traiter; j++) {
+            size_t index_auteur2 = index_auteurs[j];
+            if (index_auteur2 == 0) {
+                graphe->liste_auteurs =
+                    realloc(graphe->liste_auteurs,
+                            sizeof(char *) * (graphe->nb_auteurs + 1));
+                graphe->liste_auteurs[graphe->nb_auteurs] =
+                    malloc(strlen(liste_auteurs_a_traiter[j]) + 1);
+                graphe->liste_auteurs[graphe->nb_auteurs] =
+                    liste_auteurs_a_traiter[j];
+                graphe->liste_sucesseurs =
+                    realloc(graphe->liste_sucesseurs,
+                            sizeof(size_t *) * (graphe->nb_auteurs + 1));
+                index_auteur2 = graphe->nb_auteurs;
+                graphe->liste_sucesseurs[index_auteur2] =
+                    malloc(sizeof(size_t) * 128);
+                graphe->liste_nb_liens =
+                    realloc(graphe->liste_nb_liens,
+                            sizeof(size_t) * (graphe->nb_auteurs + 1));
+                graphe->liste_nb_liens[index_auteur2] = 0;
+                graphe->nb_auteurs++;
+            } else {
+                graphe->liste_sucesseurs[index_auteur2] =
+                    realloc(graphe->liste_sucesseurs[index_auteur2],
+                            sizeof(size_t) *
+                                (graphe->liste_nb_liens[index_auteur2] + 127));
+            }
+            graphe->liste_sucesseurs[index_auteur1]
+                                    [graphe->liste_nb_liens[index_auteur1]] =
+                index_auteur2;
+            graphe->liste_nb_liens[index_auteur1]++;
+            graphe->liste_sucesseurs[index_auteur2]
+                                    [graphe->liste_nb_liens[index_auteur2]] =
+                index_auteur1;
+            graphe->liste_nb_liens[index_auteur2]++;
+        }
+    }
+    /*
     size_t index_auteur1;
     char auteur1_existe = 0;
     size_t index_auteur2;
@@ -223,9 +292,8 @@ void addGraphe(graphe_type *graphe, donnees *data) {
             graphe->liste_nb_liens[index_auteur2]++;
         }
         auteur1_existe = 0;
-    }
+    }*/
     graphe->nb_titres++;
-fin_fct:;
 }
 
 void initStruct(donnees *xmlData) {
@@ -298,6 +366,7 @@ int main(int argc, char **argv) {
     graphe.nb_titres = 0;
     graphe.liste_sucesseurs = malloc(sizeof(int *) * STR_LEN_DEF);
     graphe.liste_nb_liens = malloc(sizeof(int) * STR_LEN_DEF);
+    memset(graphe.nb_auteurs_hache, 0, sizeof(graphe.nb_auteurs_hache));
 
     donnees xmlData;
     xmlData.auteurs = malloc(STR_LEN_DEF);
