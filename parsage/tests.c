@@ -41,13 +41,39 @@ int min(int a, int b) {
     }
 }
 
+unsigned short hache(char *chaine) {
+    unsigned int h = 0;
+    for (int k = 0; k < strlen(chaine); k++) {
+        h += (unsigned short)chaine[k];
+    }
+    return (unsigned short)h % 1000;
+}
+
 void printAvancement(FILE *entree, long int taille_fichier) {
     long int pos = ftell(entree);
     double ratio = (double)pos / (double)taille_fichier;
     ratio *= 100;
-    if ((int)ratio % 10 == 0){
-        printf("%.f%%\n", ratio);
-     } 
+    printf("%.2f%%\n", ratio);
+}
+
+size_t *index_auteur(char **liste_auteurs, size_t nb_auteurs,
+                     graphe_type *graphe) {
+    size_t *liste_index_auteurs = malloc(sizeof(size_t) * nb_auteurs);
+    for (size_t k = 0; k < nb_auteurs; k++) {
+        unsigned short h = hache(liste_auteurs[k]);
+        if (graphe->hachage_auteurs[h]) {
+            for (size_t i = 0; i < graphe->nb_auteurs_hache[h]; i++) {
+                if (!strcmp(
+                        liste_auteurs[k],
+                        graphe->liste_auteurs[graphe->hachage_auteurs[h][i]])) {
+                    liste_index_auteurs[k] = graphe->hachage_auteurs[h][i];
+                } else {
+                    liste_index_auteurs[k] = 0;
+                }
+            }
+        }
+    }
+    return liste_index_auteurs;
 }
 
 void decode_html(char *encoded_str) {
