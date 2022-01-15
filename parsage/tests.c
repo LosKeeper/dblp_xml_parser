@@ -67,6 +67,12 @@ void indexation_auteur(char **liste_auteurs, size_t nb_auteurs,
                     liste_index_auteurs[k] = index;
                 } else {
                     liste_index_auteurs[k] = -1;
+                    graphe->hachage_auteurs[h] = realloc(
+                        graphe->hachage_auteurs[h],
+                        sizeof(graphe->hachage_auteurs[h]) + sizeof(size_t));
+                    graphe->hachage_auteurs[h][graphe->nb_auteurs_hache[h]] =
+                        graphe->nb_auteurs;
+                    graphe->nb_auteurs_hache[h]++;
                 }
             }
         } else {
