@@ -46,7 +46,7 @@ unsigned short hache(char *chaine) {
     for (int k = 0; k < strlen(chaine); k++) {
         h += (unsigned short)chaine[k];
     }
-    return (unsigned short)h % 500;
+    return (unsigned short)h % 1000;
 }
 
 void printAvancement(FILE *entree, long int taille_fichier) {
@@ -71,7 +71,7 @@ void indexation_auteur(char **liste_auteurs, size_t nb_auteurs,
             liste_index_auteurs[k] = -1;
             graphe->hachage_auteurs[h] =
                 realloc(graphe->hachage_auteurs[h],
-                        sizeof(graphe->hachage_auteurs[h]) + sizeof(size_t));
+                        (graphe->nb_auteurs + 1) * sizeof(size_t));
             graphe->hachage_auteurs[h][graphe->nb_auteurs_hache[h]] =
                 graphe->nb_auteurs + k;
             graphe->nb_auteurs_hache[h]++;
@@ -153,74 +153,71 @@ void addGraphe(graphe_type *graphe, donnees *data) {
     indexation_auteur(liste_auteurs_a_traiter, nb_auteurs_a_traiter, graphe,
                       index_auteurs);
 
-    for (int k = 0; k < nb_auteurs_a_traiter; k++) {
+    /*for (int k = 0; k < nb_auteurs_a_traiter; k++) {
         printf("%d|", index_auteurs[k]);
     }
-    printf("NB AUTEURS A TRAITER : %d\n", nb_auteurs_a_traiter);
+    printf("NB AUTEURS A TRAITER : %d\n", nb_auteurs_a_traiter);*/
 
     for (int i = 0; i < nb_auteurs_a_traiter; i++) {
         int index_auteur1 = index_auteurs[i];
         if (index_auteur1 == -1) {
             graphe->liste_auteurs =
                 realloc(graphe->liste_auteurs,
-                        sizeof(graphe->liste_auteurs) + 4096 * sizeof(char *));
+                        (graphe->nb_auteurs + 1) * sizeof(char *));
             graphe->liste_auteurs[graphe->nb_auteurs] =
                 malloc(strlen(liste_auteurs_a_traiter[i]) + 1);
             strcpy(graphe->liste_auteurs[graphe->nb_auteurs],
                    liste_auteurs_a_traiter[i]);
-            graphe->liste_sucesseurs = realloc(
-                graphe->liste_sucesseurs,
-                sizeof(graphe->liste_sucesseurs) + 4096 * sizeof(size_t *));
+            graphe->liste_sucesseurs =
+                realloc(graphe->liste_sucesseurs,
+                        (graphe->nb_auteurs + 1) * sizeof(size_t *));
             index_auteur1 = graphe->nb_auteurs;
             index_auteurs[i] = index_auteur1;
-            printf("INDEX 1 : %d et %d AUTEURS\n", index_auteur1,
-                   graphe->nb_auteurs);
+            // printf("INDEX 1 : %d et %d AUTEURS\n", index_auteur1,
+            //        graphe->nb_auteurs);
             graphe->liste_sucesseurs[index_auteur1] =
-                malloc(4096 * sizeof(size_t));
+                malloc((graphe->nb_auteurs + 1) * sizeof(size_t));
             graphe->liste_nb_liens =
                 realloc(graphe->liste_nb_liens,
-                        sizeof(graphe->liste_nb_liens) + 4096 * sizeof(size_t));
+                        (graphe->nb_auteurs + 1) * sizeof(size_t));
             graphe->liste_nb_liens[index_auteur1] = 0;
             graphe->nb_auteurs++;
         } else {
             graphe->liste_sucesseurs[index_auteur1] =
                 realloc(graphe->liste_sucesseurs[index_auteur1],
-                        sizeof(graphe->liste_nb_liens[index_auteur1]) +
-                            4096 * sizeof(size_t));
+                        (graphe->nb_auteurs + 1) * sizeof(size_t));
         }
         for (int j = i + 1; j < nb_auteurs_a_traiter; j++) {
             int index_auteur2 = index_auteurs[j];
             if (index_auteur2 == -1) {
-                graphe->liste_auteurs = realloc(graphe->liste_auteurs,
-                                                sizeof(graphe->liste_auteurs) +
-                                                    4096 * sizeof(char *));
+                graphe->liste_auteurs =
+                    realloc(graphe->liste_auteurs,
+                            (graphe->nb_auteurs + 1) * sizeof(char *));
                 graphe->liste_auteurs[graphe->nb_auteurs] = malloc(
                     sizeof(char) * (strlen(liste_auteurs_a_traiter[j]) + 1));
                 strcpy(graphe->liste_auteurs[graphe->nb_auteurs],
                        liste_auteurs_a_traiter[j]);
-                graphe->liste_sucesseurs = realloc(
-                    graphe->liste_sucesseurs,
-                    sizeof(graphe->liste_sucesseurs) + 4096 * sizeof(size_t *));
+                graphe->liste_sucesseurs =
+                    realloc(graphe->liste_sucesseurs,
+                            (graphe->nb_auteurs + 1) * sizeof(size_t *));
                 index_auteur2 = graphe->nb_auteurs;
                 index_auteurs[j] = index_auteur2;
-                printf("INDEX 2 : %d et %d AUTEURS\n", index_auteur2,
-                       graphe->nb_auteurs);
+                // printf("INDEX 2 : %d et %d AUTEURS\n", index_auteur2,
+                //        graphe->nb_auteurs);
                 graphe->liste_sucesseurs[index_auteur2] =
-                    malloc(4096 * sizeof(size_t));
-                graphe->liste_nb_liens = realloc(
-                    graphe->liste_nb_liens,
-                    sizeof(graphe->liste_nb_liens) + 4096 * sizeof(size_t));
+                    malloc((graphe->nb_auteurs + 1) * sizeof(size_t));
+                graphe->liste_nb_liens =
+                    realloc(graphe->liste_nb_liens,
+                            (graphe->nb_auteurs + 1) * sizeof(size_t));
                 graphe->liste_nb_liens[index_auteur2] = 0;
                 graphe->nb_auteurs++;
             } else {
                 graphe->liste_sucesseurs[index_auteur2] =
                     realloc(graphe->liste_sucesseurs[index_auteur2],
-                            sizeof(graphe->liste_nb_liens[index_auteur2]) +
-                                sizeof(size_t));
+                            (graphe->nb_auteurs + 1) * sizeof(size_t));
                 graphe->liste_sucesseurs[index_auteur1] =
                     realloc(graphe->liste_sucesseurs[index_auteur1],
-                            sizeof(graphe->liste_nb_liens[index_auteur1]) +
-                                4096 * sizeof(size_t));
+                            (graphe->nb_auteurs + 1) * sizeof(size_t));
             }
             graphe->liste_sucesseurs[index_auteur1]
                                     [graphe->liste_nb_liens[index_auteur1]] =
@@ -306,7 +303,7 @@ int main(int argc, char **argv) {
     graphe.liste_sucesseurs = malloc(sizeof(int *) * STR_LEN_DEF);
     graphe.liste_nb_liens = malloc(sizeof(int) * STR_LEN_DEF);
     memset(graphe.nb_auteurs_hache, 0, sizeof(graphe.nb_auteurs_hache));
-    for (int i = 0; i < 500; i++) {
+    for (int i = 0; i < 1000; i++) {
         graphe.hachage_auteurs[i] = malloc(sizeof(size_t));
     }
 
