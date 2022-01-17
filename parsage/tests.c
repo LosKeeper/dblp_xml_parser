@@ -285,7 +285,7 @@ void handleCloseTag(char *tag, void *data, donnees *xmlData,
             tag_title = 0;
             if (xmlData->nbAuteurs && strcmp(xmlData->titre, "Home Page")) {
                 addGraphe(graphe, xmlData);
-                printAvancement(entree, taille_fichier);
+                // printAvancement(entree, taille_fichier);
             }
             initStruct(xmlData);
         }
