@@ -17,9 +17,9 @@ typedef struct donnees {
 
 typedef struct graphe_type {
     char **liste_auteurs;
-    int nb_auteurs;
+    size_t nb_auteurs;
     char **liste_titres;
-    int nb_titres;
+    size_t nb_titres;
     size_t **liste_sucesseurs;
     size_t *liste_nb_liens;
     size_t *hachage_auteurs[1000];
