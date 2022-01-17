@@ -60,19 +60,11 @@ void printAvancement(FILE *entree, long int taille_fichier) {
 
 void indexation_auteur(char **liste_auteurs, size_t nb_auteurs,
                        graphe_type *graphe, int *liste_index_auteurs) {
-    // printf("Pas de SEG1\n");
     for (size_t k = 0; k < nb_auteurs; k++) {
-        // printf("Pas de SEG2.1 avec %ld AUETURS\n", nb_auteurs);
         unsigned short h = hache(liste_auteurs[k]);
         if (graphe->nb_auteurs_hache[h] > 0) {
-            // printf("auteurs hache : %ld avec h=%d\n",
-            //        graphe->nb_auteurs_hache[h], h);
             for (size_t i = 0; i < graphe->nb_auteurs_hache[h]; i++) {
-                // printf("Pas de SEG2.%ld\n", i);
                 size_t index = graphe->hachage_auteurs[h][i];
-                // printf("INDEX : %ld\n", index);
-                // printf("%s\n%s\n", liste_auteurs[k],
-                //        graphe->liste_auteurs[index]);
                 if (graphe->liste_auteurs[index]) {
                     if (!strcmp(liste_auteurs[k],
                                 graphe->liste_auteurs[index])) {
@@ -81,7 +73,6 @@ void indexation_auteur(char **liste_auteurs, size_t nb_auteurs,
                     }
                 }
             }
-            // printf("ICI\n");
             liste_index_auteurs[k] = -1;
             graphe->hachage_auteurs[h] =
                 realloc(graphe->hachage_auteurs[h],
@@ -153,7 +144,6 @@ void addGraphe(graphe_type *graphe, donnees *data) {
     // Création d'une liste des auteurs a traiter
     char **liste_auteurs_a_traiter = malloc(sizeof(char *) * data->nbAuteurs);
     char *pointeur = data->auteurs;
-    // printf("Début addGraphe1\n");
     for (int i = 0; i < data->nbAuteurs; i++) {
         char *buffer = malloc(strlen(pointeur) + 1);
         strcpy(buffer, pointeur);
@@ -168,18 +158,11 @@ void addGraphe(graphe_type *graphe, donnees *data) {
 
     int nb_auteurs_a_traiter = data->nbAuteurs;
     int *index_auteurs = malloc(sizeof(int) * nb_auteurs_a_traiter);
-    // printf("Début addGraphe2\n");
     indexation_auteur(liste_auteurs_a_traiter, nb_auteurs_a_traiter, graphe,
-                      index_auteurs); // BUG ICI !!
-    // printf("Début addGraphe3\n");
-    // for (int k = 0; k < nb_auteurs_a_traiter; k++) {
-    //     printf("%s|", liste_auteurs_a_traiter[k]);
-    // }
-    // printf("NB AUTEURS A TRAITER : %d\n", nb_auteurs_a_traiter);
+                      index_auteurs);
 
     for (int i = 0; i < nb_auteurs_a_traiter; i++) {
         int index_auteur1 = index_auteurs[i];
-        // printf("1.0\n");
         if (index_auteur1 == -1) {
             graphe->liste_auteurs =
                 realloc(graphe->liste_auteurs,
@@ -208,11 +191,9 @@ void addGraphe(graphe_type *graphe, donnees *data) {
         for (int j = i + 1; j < nb_auteurs_a_traiter; j++) {
             int index_auteur2 = index_auteurs[j];
             if (index_auteur2 == -1) {
-                // printf("2.1\n");
                 graphe->liste_auteurs =
                     realloc(graphe->liste_auteurs,
                             (graphe->nb_auteurs + 1) * sizeof(char *));
-                // printf("2.2\n");
                 graphe->liste_auteurs[graphe->nb_auteurs] = malloc(
                     sizeof(char) * (strlen(liste_auteurs_a_traiter[j]) + 1));
                 strcpy(graphe->liste_auteurs[graphe->nb_auteurs],
@@ -230,17 +211,14 @@ void addGraphe(graphe_type *graphe, donnees *data) {
                 graphe->liste_nb_liens[index_auteur2] = 0;
                 graphe->nb_auteurs++;
             } else {
-                // printf("2.EXISTE\n");
                 graphe->liste_sucesseurs[index_auteur2] =
                     realloc(graphe->liste_sucesseurs[index_auteur2],
                             (graphe->liste_nb_liens[index_auteur2] + 1) *
                                 sizeof(size_t));
-                graphe->liste_sucesseurs[index_auteur1] =
-                    realloc(graphe->liste_sucesseurs[index_auteur1],
-                            (graphe->liste_nb_liens[index_auteur1] + 1) *
-                                sizeof(size_t));
             }
-            // printf("2.3\n");
+            graphe->liste_sucesseurs[index_auteur1] = realloc(
+                graphe->liste_sucesseurs[index_auteur1],
+                (graphe->liste_nb_liens[index_auteur1] + 1) * sizeof(size_t));
             graphe->liste_sucesseurs[index_auteur1]
                                     [graphe->liste_nb_liens[index_auteur1]] =
                 index_auteur2;
@@ -249,13 +227,11 @@ void addGraphe(graphe_type *graphe, donnees *data) {
                 index_auteur1;
             graphe->liste_nb_liens[index_auteur1]++;
             graphe->liste_nb_liens[index_auteur2]++;
-            // printf("2.4\n");
         }
     }
     graphe->nb_titres++;
     free(liste_auteurs_a_traiter);
     free(index_auteurs);
-// printf("Fin addGraphe\n");
 no_add_graphe:;
 }
 
