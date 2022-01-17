@@ -22,8 +22,8 @@ typedef struct graphe_type {
     int nb_titres;
     size_t **liste_sucesseurs;
     size_t *liste_nb_liens;
-    size_t *hachage_auteurs[1000];
-    size_t nb_auteurs_hache[1000];
+    size_t *hachage_auteurs[500];
+    size_t nb_auteurs_hache[500];
 } graphe_type;
 
 typedef struct parser_info_t {
