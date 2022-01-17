@@ -132,8 +132,7 @@ void addGraphe(graphe_type *graphe, donnees *data) {
     graphe->liste_titres[graphe->nb_titres] = malloc(strlen(data->titre) + 1);
     strcpy(graphe->liste_titres[graphe->nb_titres], data->titre);
 
-    // Création d'une liste des auteurs a traiter (verifier si pas d'auteur
-    // alors erreur)
+    // Création d'une liste des auteurs a traiter
     char **liste_auteurs_a_traiter = malloc(sizeof(char *) * data->nbAuteurs);
     char *pointeur = data->auteurs;
     for (int i = 0; i < data->nbAuteurs; i++) {
@@ -173,8 +172,6 @@ void addGraphe(graphe_type *graphe, donnees *data) {
                         (graphe->nb_auteurs + 1) * sizeof(size_t *));
             index_auteur1 = graphe->nb_auteurs;
             index_auteurs[i] = index_auteur1;
-            // printf("INDEX 1 : %d et %d AUTEURS\n", index_auteur1,
-            //        graphe->nb_auteurs);
             graphe->liste_sucesseurs[index_auteur1] =
                 malloc((graphe->nb_auteurs + 1) * sizeof(size_t));
             graphe->liste_nb_liens =
@@ -202,8 +199,6 @@ void addGraphe(graphe_type *graphe, donnees *data) {
                             (graphe->nb_auteurs + 1) * sizeof(size_t *));
                 index_auteur2 = graphe->nb_auteurs;
                 index_auteurs[j] = index_auteur2;
-                // printf("INDEX 2 : %d et %d AUTEURS\n", index_auteur2,
-                //        graphe->nb_auteurs);
                 graphe->liste_sucesseurs[index_auteur2] =
                     malloc((graphe->nb_auteurs + 1) * sizeof(size_t));
                 graphe->liste_nb_liens =
