@@ -1,0 +1,6 @@
+12
+1;1;2;2;2;0;2;2;2;1;1;0;
+1|;0|;3|4|;2|4|;2|3|;;7|8|;6|8|;6|7|;10|;9|;;
+Farshad Nayeri;Benjamin Hurwitz;Frank Manola;Mark F. Hornick;Alejandro P. Buchmann;Frank Manola;Alejandro P. Buchmann;M. Tamer Ozsu;Dimitrios Georgakopoulos;Michael L. Brodie;Michael Stonebraker;Michael Stonebraker;
+6
+Experiments with Dispatching in a Distributed Object System.;Object Data Model Facilities for Multimedia Data Types.;MetaObject Protocol Concepts for a RISC Object Model.;Towards a Transaction Management System for DOM.;DARWIN: On the Incremental Migration of Legacy Information Systems;Muffin: A Distributed Database Machine;

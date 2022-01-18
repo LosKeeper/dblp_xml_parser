@@ -112,7 +112,7 @@ void decode_html(char *encoded_str) {
     }
 }
 
-void printBinaire(FILE *file, donnees *data) {
+void printDataStrcut(FILE *file, donnees *data) {
     fprintf(file, "%d;%s%s\n", data->nbAuteurs, data->auteurs, data->titre);
 }
 
@@ -128,6 +128,7 @@ void printGraphe(graphe_type *graphe, FILE *sortie) {
         }
         fprintf(sortie, ";");
     }
+    fprintf(sortie, "\n");
     for (int i = 0; i < graphe->nb_auteurs; i++) {
         fprintf(sortie, "%s;", graphe->liste_auteurs[i]);
     }
@@ -137,6 +138,114 @@ void printGraphe(graphe_type *graphe, FILE *sortie) {
         fprintf(sortie, "%s;", graphe->liste_titres[i]);
     }
     fprintf(sortie, "\n");
+}
+
+void importGraphe(graphe_type *graphe, FILE *entree) {
+
+    char *buffer = malloc(STR_LEN_DEF);
+    char carac_buffer = fgetc(entree);
+    uint it = 0;
+
+    // graphe->nb_auteurs
+    while (carac_buffer != '\n') {
+        buffer[it] = carac_buffer;
+        carac_buffer = fgetc(entree);
+        it++;
+    }
+    graphe->nb_auteurs = atoi(buffer);
+    free(buffer);
+
+    // graphe->liste_nb_liens
+    graphe->liste_nb_liens =
+        realloc(graphe->liste_nb_liens, sizeof(size_t) * graphe->nb_auteurs);
+    graphe->liste_sucesseurs = realloc(graphe->liste_sucesseurs,
+                                       sizeof(size_t *) * graphe->nb_auteurs);
+    for (size_t i = 0; i < graphe->nb_auteurs; i++) {
+        char *buffer2 = malloc(STR_LEN_DEF);
+        carac_buffer = fgetc(entree);
+        it = 0;
+        while (carac_buffer != ';') {
+            buffer2[it] = carac_buffer;
+            carac_buffer = fgetc(entree);
+            it++;
+        }
+        it = 0;
+        graphe->liste_nb_liens[i] = atoi(buffer2);
+        graphe->liste_sucesseurs[i] =
+            realloc(graphe->liste_sucesseurs[i],
+                    sizeof(size_t) * graphe->liste_nb_liens[i]);
+        free(buffer2);
+    }
+
+    // graphe->liste_successeurs
+    for (size_t i = 0; i < graphe->nb_auteurs; i++) {
+        for (size_t j = 0; j < graphe->liste_nb_liens[i]; j++) {
+            char *buffer3 = malloc(STR_LEN_DEF);
+            carac_buffer = fgetc(entree);
+            it = 0;
+            while (carac_buffer != '|') {
+                buffer3[it] = carac_buffer;
+                carac_buffer = fgetc(entree);
+                it++;
+            }
+            it = 0;
+            graphe->liste_sucesseurs[i][j] = atoi(buffer3);
+            free(buffer3);
+        }
+        carac_buffer = fgetc(entree);
+    }
+    carac_buffer = fgetc(entree);
+
+    // graphe->liste_auteurs
+    graphe->liste_auteurs =
+        realloc(graphe->liste_auteurs, sizeof(char *) * graphe->nb_auteurs);
+    for (size_t i = 0; i < graphe->nb_auteurs; i++) {
+        char *buffer6 = malloc(STR_LEN_DEF);
+        carac_buffer = fgetc(entree);
+        uint it = 0;
+        while (carac_buffer != ';') {
+            buffer6[it] = carac_buffer;
+            carac_buffer = fgetc(entree);
+            it++;
+        }
+        buffer6[it] = '\0';
+        it = 0;
+        graphe->liste_auteurs[i] = malloc(strlen(buffer6) + 1);
+        strcpy(graphe->liste_auteurs[i], buffer6);
+        free(buffer6);
+    }
+    carac_buffer = fgetc(entree);
+
+    // graphe->nb_titres
+    char *buffer4 = malloc(STR_LEN_DEF);
+    carac_buffer = fgetc(entree);
+    it = 0;
+    while (carac_buffer != '\n') {
+        buffer4[it] = carac_buffer;
+        carac_buffer = fgetc(entree);
+        it++;
+    }
+    graphe->nb_titres = atoi(buffer4);
+    free(buffer4);
+
+    // graphe->liste_titres
+    graphe->liste_titres =
+        realloc(graphe->liste_titres, sizeof(char *) * graphe->nb_titres);
+    for (size_t i = 0; i < graphe->nb_titres; i++) {
+        char *buffer5 = malloc(STR_LEN_DEF);
+        carac_buffer = fgetc(entree);
+        uint it = 0;
+        while (carac_buffer != ';') {
+            buffer5[it] = carac_buffer;
+            carac_buffer = fgetc(entree);
+            it++;
+        }
+        buffer5[it] = '\0';
+        it = 0;
+        graphe->liste_titres[i] = malloc(strlen(buffer5) + 1);
+        strcpy(graphe->liste_titres[i], buffer5);
+        free(buffer5);
+    }
 }
 
 void addGraphe(graphe_type *graphe, donnees *data) {
@@ -303,7 +412,7 @@ void handleCloseTag(char *tag, void *data, donnees *xmlData,
 }
 
 int main(int argc, char **argv) {
-    if (argc != 2)
+    if (argc != 3)
         return 2;
 
     parser_context_t context = {};
@@ -336,6 +445,8 @@ int main(int argc, char **argv) {
     FILE *sortie = fopen(argv[2], "w");
 
     parse(argv[1], &info, &xmlData, &graphe);
+    // FILE *entree = fopen(argv[1], "r");
+    // importGraphe(&graphe, entree);
     printGraphe(&graphe, sortie);
     return 0;
 }
