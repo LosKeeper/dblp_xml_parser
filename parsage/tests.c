@@ -25,6 +25,8 @@ char lecture = 0;
 char tag_author = 0;
 char tag_title = 0;
 char structInit = 0;
+unsigned short pourc_prev = 0;
+unsigned short pourc_new = 0;
 
 int max(int a, int b) {
     if (a >= b) {
@@ -47,21 +49,25 @@ unsigned short hache(char *chaine) {
     unsigned int b = 49919;
     unsigned int h = 0;
     for (int k = 0; k < strlen(chaine); k++) {
-        h += (unsigned short)(a * chaine[k] + b);
+        h += (unsigned int)(a * chaine[k] + b);
     }
-    return (unsigned short)h % 100000;
+    return (unsigned int)h % 100000;
 }
 
 void printAvancement(FILE *entree, long int taille_fichier) {
     long int pos = ftell(entree);
     double ratio = (double)pos * 100 / (double)taille_fichier;
-    printf("%.2f%%\n", ratio);
+    pourc_new = (unsigned short)ratio;
+    if (pourc_new > pourc_prev) {
+        printf("%d%%\n", pourc_new);
+    }
+    pourc_prev = pourc_new;
 }
 
 void indexation_auteur(char **liste_auteurs, size_t nb_auteurs,
                        graphe_type *graphe, int *liste_index_auteurs) {
     for (size_t k = 0; k < nb_auteurs; k++) {
-        unsigned short h = hache(liste_auteurs[k]);
+        unsigned int h = hache(liste_auteurs[k]);
         if (graphe->nb_auteurs_hache[h] > 0) {
             for (size_t i = 0; i < graphe->nb_auteurs_hache[h] - 1; i++) {
                 size_t index = graphe->hachage_auteurs[h][i];
@@ -326,7 +332,7 @@ int main(int argc, char **argv) {
     int err;
     if (PARSER_OK != (err = parse(argv[1], &info, &xmlData, &graphe))) {
         printGraphe(&graphe);
-        return err;
+        return 1;
     }
     return 0;
 }
