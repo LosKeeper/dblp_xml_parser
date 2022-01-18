@@ -28,13 +28,13 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                 carac_buffer = (char)fgetc(entree);
                 while (carac_buffer != '>') {
                     if (carac_buffer == EOF) {
-                        if (CptOuvrant != CptFermant) {
+                        /*if (CptOuvrant != CptFermant) {
                             fprintf(stderr,
                                     "Unexpected end of tag (missing '>')");
                             free(data);
                             return ERROR_UNEXPECTED_END_OF_TAG;
-                        }
-                        free(data);
+                        }*/
+                        // free(data);
                         return PARSER_OK;
                     }
                     data[it] = carac_buffer;
@@ -49,13 +49,13 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
             } else {
                 while (carac_buffer != '>') {
                     if (carac_buffer == EOF) {
-                        if (CptOuvrant != CptFermant) {
+                        /*if (CptOuvrant != CptFermant) {
                             fprintf(stderr,
                                     "Unexpected end of tag (missing '>')");
                             free(data);
                             return ERROR_UNEXPECTED_END_OF_TAG;
-                        }
-                        free(data);
+                        }*/
+                        // free(data);
                         return PARSER_OK;
                     }
                     if (carac_buffer == ' ') {
@@ -80,12 +80,12 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
             int it = 0;
             while (carac_buffer != '<') {
                 if (carac_buffer == EOF) {
-                    if (CptOuvrant != CptFermant) {
+                    /*if (CptOuvrant != CptFermant) {
                         fprintf(stderr, "Unexpected end of tag (missing '>')");
                         free(data);
                         return ERROR_UNEXPECTED_END_OF_TAG;
-                    }
-                    free(data);
+                    }*/
+                    // free(data);
                     return PARSER_OK;
                 }
                 data[it] = carac_buffer;
@@ -101,6 +101,6 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
         carac_buffer = (char)fgetc(entree);
     passe_fgetc:;
     }
-    free(data);
+    // free(data);
     return PARSER_OK;
 }

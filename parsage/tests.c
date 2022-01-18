@@ -116,23 +116,27 @@ void printBinaire(FILE *file, donnees *data) {
     fprintf(file, "%d;%s%s\n", data->nbAuteurs, data->auteurs, data->titre);
 }
 
-void printGraphe(graphe_type *graphe) {
-    printf("LISTE SUCC : \n");
+void printGraphe(graphe_type *graphe, FILE *sortie) {
+    fprintf(sortie, "%ld\n", graphe->nb_auteurs);
+    for (size_t i = 0; i < graphe->nb_auteurs; i++) {
+        fprintf(sortie, "%ld;", graphe->liste_nb_liens[i]);
+    }
+    fprintf(sortie, "\n");
     for (size_t i = 0; i < graphe->nb_auteurs; i++) {
         for (size_t j = 0; j < graphe->liste_nb_liens[i]; j++) {
-            printf("%ld|", graphe->liste_sucesseurs[i][j]);
+            fprintf(sortie, "%ld|", graphe->liste_sucesseurs[i][j]);
         }
-        printf(";");
+        fprintf(sortie, ";");
     }
-    printf("\nLISTE AUTEURS : ");
     for (int i = 0; i < graphe->nb_auteurs; i++) {
-        printf("%s;", graphe->liste_auteurs[i]);
+        fprintf(sortie, "%s;", graphe->liste_auteurs[i]);
     }
-    printf("\nLISTE TITRES : ");
+    fprintf(sortie, "\n");
+    fprintf(sortie, "%ld\n", graphe->nb_titres);
     for (int i = 0; i < graphe->nb_titres; i++) {
-        printf("%s;", graphe->liste_titres[i]);
+        fprintf(sortie, "%s;", graphe->liste_titres[i]);
     }
-    printf("\n");
+    fprintf(sortie, "\n");
 }
 
 void addGraphe(graphe_type *graphe, donnees *data) {
@@ -291,7 +295,7 @@ void handleCloseTag(char *tag, void *data, donnees *xmlData,
             tag_title = 0;
             if (xmlData->nbAuteurs && strcmp(xmlData->titre, "Home Page")) {
                 addGraphe(graphe, xmlData);
-                printAvancement(entree, taille_fichier);
+                // printAvancement(entree, taille_fichier);
             }
             initStruct(xmlData);
         }
@@ -329,10 +333,9 @@ int main(int argc, char **argv) {
     info.handleText = handleText;
     info.data = &context;
 
-    int err;
-    if (PARSER_OK != (err = parse(argv[1], &info, &xmlData, &graphe))) {
-        printGraphe(&graphe);
-        return 1;
-    }
+    FILE *sortie = fopen(argv[2], "w");
+
+    parse(argv[1], &info, &xmlData, &graphe);
+    printGraphe(&graphe, sortie);
     return 0;
 }
