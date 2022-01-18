@@ -2,15 +2,14 @@
 
 |Ne pas oublier de retirer les "Home Page"
 |Ajouter for dans for pour addGraphe pour plusieurs auteurs
-~Finir table de hachege en ajoutant les nouveaux index au tableau
-Fichier Binaire
+|Finir table de hachege en ajoutant les nouveaux index au tableau
+|Fichier Binaire
 Tester tous les malloc et realloc
     https://coderedirect.com/questions/523992/valgrind-address-is-0-bytes-after-a-block-of-size-8-allocd
 Seg Fault decode_html
 
 */
 #include "xmlp.h"
-#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
