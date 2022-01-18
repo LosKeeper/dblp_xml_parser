@@ -43,13 +43,13 @@ int min(int a, int b) {
 }
 
 unsigned short hache(char *chaine) {
-    unsigned int a = 5;
-    unsigned int b = 151;
+    unsigned int a = 9887;
+    unsigned int b = 49919;
     unsigned int h = 0;
     for (int k = 0; k < strlen(chaine); k++) {
         h += (unsigned short)(a * chaine[k] + b);
     }
-    return (unsigned short)h % 1000;
+    return (unsigned short)h % 100000;
 }
 
 void printAvancement(FILE *entree, long int taille_fichier) {
@@ -63,7 +63,7 @@ void indexation_auteur(char **liste_auteurs, size_t nb_auteurs,
     for (size_t k = 0; k < nb_auteurs; k++) {
         unsigned short h = hache(liste_auteurs[k]);
         if (graphe->nb_auteurs_hache[h] > 0) {
-            for (size_t i = 0; i < graphe->nb_auteurs_hache[h]; i++) {
+            for (size_t i = 0; i < graphe->nb_auteurs_hache[h] - 1; i++) {
                 size_t index = graphe->hachage_auteurs[h][i];
                 if (graphe->liste_auteurs[index]) {
                     if (!strcmp(liste_auteurs[k],
@@ -81,7 +81,6 @@ void indexation_auteur(char **liste_auteurs, size_t nb_auteurs,
                 graphe->nb_auteurs + k;
             graphe->nb_auteurs_hache[h]++;
 
-        pas_ajout:;
         } else {
             graphe->hachage_auteurs[h] =
                 realloc(graphe->hachage_auteurs[h],
@@ -90,6 +89,7 @@ void indexation_auteur(char **liste_auteurs, size_t nb_auteurs,
             graphe->nb_auteurs_hache[h]++;
             liste_index_auteurs[k] = -1;
         }
+    pas_ajout:;
     }
 }
 
@@ -285,7 +285,7 @@ void handleCloseTag(char *tag, void *data, donnees *xmlData,
             tag_title = 0;
             if (xmlData->nbAuteurs && strcmp(xmlData->titre, "Home Page")) {
                 addGraphe(graphe, xmlData);
-                // printAvancement(entree, taille_fichier);
+                printAvancement(entree, taille_fichier);
             }
             initStruct(xmlData);
         }
@@ -306,7 +306,7 @@ int main(int argc, char **argv) {
     graphe.liste_sucesseurs = malloc(sizeof(int *) * STR_LEN_DEF);
     graphe.liste_nb_liens = malloc(sizeof(int) * STR_LEN_DEF);
     memset(graphe.nb_auteurs_hache, 0, sizeof(graphe.nb_auteurs_hache));
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 100000; i++) {
         graphe.hachage_auteurs[i] = malloc(sizeof(size_t));
     }
 
