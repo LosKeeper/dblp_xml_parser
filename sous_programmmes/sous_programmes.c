@@ -13,41 +13,24 @@ typedef struct graphe_type {
     size_t *liste_nb_liens;
 } graphe_type;
 
-int** bufferiserchemin(int** tableau_dijkstra, int* chemin,int k){
-
-}
-
 
 size_t** nmbre_separateur_a_sauter(int nb_auteur, graphe_type* graphe){
     int k=0;
     int somme=0;
     size_t **liste_sucesseurs_buffer=malloc(sizeof(graphe->liste_sucesseurs));
     while(somme!=nb_auteur){
-        if(liste_sucesseurs_buffer[k]==';'){
-            somme++;
-            k++;
-        }
-        else{
-            liste_sucesseurs_buffer[k]==liste_sucesseurs_buffer[k+1];
-            k++;
-        }
-        return liste_sucesseurs_buffer;
+        liste_sucesseurs_buffer[k]==liste_sucesseurs_buffer[k+1];
+        k++;
+        somme++;
     }
-}
-void verifier_si_successeurs(int nb_auteur, graphe_type* graphe){
-    size_t **liste_sucesseurs_buffer=malloc(sizeof(graphe->liste_sucesseurs));
-    liste_sucesseurs_buffer=nmbre_separateur_a_sauter(nb_auteur, graphe);
-    if(liste_sucesseurs_buffer[0]=='|'){
-        goto fin_boucle;
-    }
-    fin_boucle;
+    return liste_sucesseurs_buffer;
 }
 
 int arriver(int nb_auteur_precedent, int nb_puit, graphe_type* graphe){
     size_t **liste_sucesseurs_buffer=malloc(sizeof(graphe->liste_sucesseurs));
     liste_sucesseurs_buffer=nmbre_separateur_a_sauter(nb_auteur_precedent, graphe);
     int k=0;
-    while(liste_sucesseurs_buffer[k]!=';'){
+    while(k!=graphe->liste_nb_liens){
         if(liste_sucesseurs_buffer[k]==nb_puit){
             printf("On est arrivé\n");
             return 1;
@@ -57,13 +40,8 @@ int arriver(int nb_auteur_precedent, int nb_puit, graphe_type* graphe){
             k++;
         }
     }
+    return 0;
 }
-
-
-
-
-
-
 
 
 /** https://github.com/samsonmolou/dijsktra-algorithm/blob/master/main.c */
@@ -100,7 +78,7 @@ int dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
     }
     liste_sucesseurs_buffer_un=nmbre_separateur_a_sauter(numero_auteur_un,graphe);
     liste_sucesseurs_buffer_deux=nmbre_separateur_a_sauter(numero_auteur_deux, graphe);
-    if(liste_sucesseurs_buffer_un[0]=='|' || liste_sucesseurs_buffer_deux[0]=='|'){
+    if(graphe->liste_sucesseurs[numero_auteur_un]==0 || graphe->liste_sucesseurs[numero_auteur_deux]==0){
         printf("L'un des deux auteurs n'a co-écrit aucun récit\n");
         printf("Le chemin le plus court est de 0 (chemin impossible entre les auteurs)");
         return 0;
@@ -108,7 +86,8 @@ int dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
     }
     }
     k=0;
-    while(liste_sucesseurs_buffer_un[k]!=';'){
+    int somme=0;
+    while(graphe->liste_sucesseurs[numero_auteur_un]!=somme){
         if(liste_sucesseurs_buffer_un[k]==numero_auteur_deux){
             printf("le chemin le plus court est de 1 (chemin direct d'un auteur à l'autre)");
             goto fin_boucle;
@@ -117,12 +96,23 @@ int dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
             k++;
         }
     }
+    int etape=0;
+    somme=0;
     k=0;
+    int auteur_buffer;
     int** tableau_dijkstra=malloc(graphe->nb_auteurs);
-    tableau_dijkstra[numero_auteur_un][1]=0;
+    size_t** liste_sucesseurs_buffer=malloc(1000);
+    tableau_dijkstra[0][numero_auteur_un]=0-0;
+    while((graphe->liste_sucesseurs[numero_auteur_un]!=somme){
+        etape++;
+        somme++;
+        auteur_buffer=liste_sucesseurs_buffer_un[0+2*k];
+        liste_sucesseurs_buffer=nmbre_separateur_a_sauter(auteur_buffer, graphe);
+        while(liste_sucesseurs_buffer[k]!=';'){
+            if(liste_sucesseurs_buffer_un[0+2*k]==){
 
-    while(liste_sucesseurs_buffer_un[k]!=';'){
-        tableau_dijkstra[][]=liste_sucesseurs_buffer_un[k];
+            }
+        }
     }
     fin_boucle:;
     } 
