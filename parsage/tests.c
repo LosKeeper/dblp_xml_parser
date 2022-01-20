@@ -280,7 +280,7 @@ void addGraphe(graphe_type *graphe, donnees *data) {
                       index_auteurs);
 
     for (int i = 0; i < nb_auteurs_a_traiter; i++) {
-        int index_auteur1 = index_auteurs[i];
+        size_t index_auteur1 = index_auteurs[i];
         if (index_auteur1 == -1) {
             graphe->liste_auteurs =
                 realloc(graphe->liste_auteurs,
@@ -307,7 +307,7 @@ void addGraphe(graphe_type *graphe, donnees *data) {
                 (graphe->liste_nb_liens[index_auteur1] + 1) * sizeof(size_t));
         }
         for (int j = i + 1; j < nb_auteurs_a_traiter; j++) {
-            int index_auteur2 = index_auteurs[j];
+            size_t index_auteur2 = index_auteurs[j];
             if (index_auteur2 == -1) {
                 graphe->liste_auteurs =
                     realloc(graphe->liste_auteurs,
@@ -353,7 +353,7 @@ void addGraphe(graphe_type *graphe, donnees *data) {
 no_add_graphe:;
 }
 
-void initStruct(donnees *xmlData) {
+void resetDataStruct(donnees *xmlData) {
     free(xmlData->auteurs);
     free(xmlData->titre);
     xmlData->nbAuteurs = 0;
@@ -403,10 +403,38 @@ void handleCloseTag(char *tag, void *data, donnees *xmlData,
             tag_title = 0;
             if (xmlData->nbAuteurs && strcmp(xmlData->titre, "Home Page")) {
                 addGraphe(graphe, xmlData);
-                // printAvancement(entree, taille_fichier);
+                printAvancement(entree, taille_fichier);
             }
-            initStruct(xmlData);
+            resetDataStruct(xmlData);
         }
+    }
+}
+
+void initData(donnees *xmlData) {
+    xmlData->auteurs = malloc(STR_LEN_DEF);
+    xmlData->titre = malloc(STR_LEN_DEF);
+    xmlData->auteurs[0] = '\0';
+    xmlData->titre[0] = '\0';
+    xmlData->nbAuteurs = 0;
+}
+
+void initInfo(parser_info_t *info, parser_context_t *context) {
+    info->handleOpenTag = handleOpenTag;
+    info->handleCloseTag = handleCloseTag;
+    info->handleText = handleText;
+    info->data = &context;
+}
+
+void initGraphe(graphe_type *graphe) {
+    graphe->liste_auteurs = malloc(sizeof(char *) * STR_LEN_DEF);
+    graphe->liste_titres = malloc(sizeof(char *) * STR_LEN_DEF);
+    graphe->nb_auteurs = 0;
+    graphe->nb_titres = 0;
+    graphe->liste_sucesseurs = malloc(sizeof(int *) * STR_LEN_DEF);
+    graphe->liste_nb_liens = malloc(sizeof(int) * STR_LEN_DEF);
+    memset(graphe->nb_auteurs_hache, 0, sizeof(graphe->nb_auteurs_hache));
+    for (int i = 0; i < 100000; i++) {
+        graphe->hachage_auteurs[i] = malloc(sizeof(size_t));
     }
 }
 
@@ -414,32 +442,15 @@ int main(int argc, char **argv) {
     if (argc != 3)
         return 2;
 
-    parser_context_t context = {};
-
     graphe_type graphe;
-    graphe.liste_auteurs = malloc(sizeof(char *) * STR_LEN_DEF);
-    graphe.liste_titres = malloc(sizeof(char *) * STR_LEN_DEF);
-    graphe.nb_auteurs = 0;
-    graphe.nb_titres = 0;
-    graphe.liste_sucesseurs = malloc(sizeof(int *) * STR_LEN_DEF);
-    graphe.liste_nb_liens = malloc(sizeof(int) * STR_LEN_DEF);
-    memset(graphe.nb_auteurs_hache, 0, sizeof(graphe.nb_auteurs_hache));
-    for (int i = 0; i < 100000; i++) {
-        graphe.hachage_auteurs[i] = malloc(sizeof(size_t));
-    }
+    initGraphe(&graphe);
 
     donnees xmlData;
-    xmlData.auteurs = malloc(STR_LEN_DEF);
-    xmlData.titre = malloc(STR_LEN_DEF);
-    xmlData.auteurs[0] = '\0';
-    xmlData.titre[0] = '\0';
-    xmlData.nbAuteurs = 0;
+    initData(&xmlData);
 
+    parser_context_t context = {};
     parser_info_t info;
-    info.handleOpenTag = handleOpenTag;
-    info.handleCloseTag = handleCloseTag;
-    info.handleText = handleText;
-    info.data = &context;
+    initInfo(&info, &context);
 
     FILE *sortie = fopen(argv[2], "w");
 

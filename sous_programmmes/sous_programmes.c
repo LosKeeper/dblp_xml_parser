@@ -103,9 +103,9 @@ int dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
     int** tableau_dijkstra=malloc(graphe->nb_auteurs);
     size_t** liste_sucesseurs_buffer=malloc(1000);
     tableau_dijkstra[0][numero_auteur_un]=0-0;
-    while((graphe->liste_sucesseurs[numero_auteur_un]!=somme){
-        etape++;
+    while(graphe->liste_nb_liens[k]!=somme){
         somme++;
+        etape++;
         auteur_buffer=liste_sucesseurs_buffer_un[0+2*k];
         liste_sucesseurs_buffer=nmbre_separateur_a_sauter(auteur_buffer, graphe);
         while(liste_sucesseurs_buffer[k]!=';'){

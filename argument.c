@@ -59,7 +59,15 @@ void checkOptionsValidity(options_t *options) {
         }
         if (options->output_binary) {
             // graphe_type graphe;
-            // parsage(options->input_database,options->output_binary,graphe);
+            // initGraphe(&graphe);
+            // donnees data;
+            // initData(&data);
+            // parser_info_t info;
+            // parser_context_t context = {};
+            // initInfo(&info,&context);
+            // parse(options->input_database,&info,&data,&graphe);
+            // FILE *sortie = fopen(options->output_binary, "w");
+            // printGraphe(&graphe, sortie);
             if (options->auteur1) {
                 if (options->auteur2) {
                     // dijkstra(graphe,options->auteur1,options->auteur2);
@@ -70,7 +78,8 @@ void checkOptionsValidity(options_t *options) {
     if (options->input_binary) {
         if (options->auteur1) {
             if (options->auteur2) {
-                // charger_structure(options->input_binary,graphe);
+                // FILE *entree = fopen(options->input_binary, "r");
+                // importGraphe(&graphe, entree);
                 // dijkstra(graphe,options->auteur1,options->auteur2);
             }
         }
