@@ -13,6 +13,7 @@ typedef struct graphe_type {
     size_t *liste_nb_liens;
 } graphe_type;
 
+/*
 size_t** nmbre_separateur_a_sauter(int nb_auteur, graphe_type* graphe){
     int k=0;
     int somme=0;
@@ -24,7 +25,8 @@ size_t** nmbre_separateur_a_sauter(int nb_auteur, graphe_type* graphe){
     }
     return liste_sucesseurs_buffer;
 }
-
+*/
+/*
 int arriver(int nb_auteur_precedent, int nb_puit, graphe_type* graphe){
     size_t **liste_sucesseurs_buffer=malloc(sizeof(graphe->liste_sucesseurs));
     liste_sucesseurs_buffer=nmbre_separateur_a_sauter(nb_auteur_precedent, graphe);
@@ -41,9 +43,11 @@ int arriver(int nb_auteur_precedent, int nb_puit, graphe_type* graphe){
     }
     return 0;
 }
+*/
 
+char* chemin(int** tableau_dijkstra,int numero_auteur_deux){
 
-char* chemin(int** tableau_dijkstra,int numero_auteur_deux){}
+}
 
 
 char* dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
@@ -104,9 +108,8 @@ char* dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
         while(graphe->liste_nb_liens[numero_auteur_buffer]!=somme_buffer){
             if(graphe->liste_sucesseurs[numero_auteur_buffer][k]==numero_auteur_deux){
                 tableau_dijkstra[0][numero_auteur_buffer]=etape-numero_auteur_un;
-                tableau_dijkstra[0][numero_auteur_deux]=etape-numero_auteur_buffer;
-                printf("On est arrivé. ");
-                printf("Le chemin est le suivant : \n");
+                tableau_dijkstra[0][numero_auteur_deux]=etape-numero_auteur_buffer;       
+                printf("Le coût de ce chemin est de : %d", tableau_dijkstra[numero_auteur_deux][0]);
             }
             else{
                 tableau_dijkstra[0][numero_auteur_buffer]=etape-numero_auteur_buffer_precedent;
@@ -118,3 +121,7 @@ char* dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
     }
     fin_boucle:;
     } 
+
+int main(){
+    return 0;
+}
