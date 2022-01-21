@@ -4,7 +4,7 @@
 #include <string.h>
 
 parser_error_type_t parse(const char *filename, parser_info_t *info,
-                          donnees *xmlData, graphe_type *graphe) {
+                          data_t *xmlData, graphe_t *graphe) {
     FILE *entree = fopen(filename, "r");
     fseek(entree, 0, SEEK_END);
     long int taille_fichier = ftell(entree);

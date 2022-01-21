@@ -5,14 +5,6 @@
 
 #define STR_LEN_DEF 10000
 
-typedef struct parser_info_t {
-    void (*handleOpenTag)(char *, void *, data_t *, graphe_t *);
-    void (*handleCloseTag)(char *, void *, data_t *, graphe_t *, FILE *,
-                           long int);
-    void (*handleText)(char *, void *, data_t *, graphe_t *);
-    void *data;
-} parser_info_t;
-
 typedef struct parser_context_t {
     int text_count;
     int open_count;
@@ -35,6 +27,14 @@ typedef struct graphe_t {
     size_t *hachage_auteurs[100000];
     size_t nb_auteurs_hache[100000];
 } graphe_t;
+
+typedef struct parser_info_t {
+    void (*handleOpenTag)(char *, void *, data_t *, graphe_t *);
+    void (*handleCloseTag)(char *, void *, data_t *, graphe_t *, FILE *,
+                           long int);
+    void (*handleText)(char *, void *, data_t *, graphe_t *);
+    void *data;
+} parser_info_t;
 
 /**
  * @brief save a data_t struct into the file named file
