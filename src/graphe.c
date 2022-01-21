@@ -1,5 +1,7 @@
 #include "graphe.h"
+#include "hachage.h"
 #include <stdlib.h>
+#include <string.h>
 
 void printGraphe(graphe_t *graphe, FILE *sortie) {
     fprintf(sortie, "%ld\n", graphe->nb_auteurs);
@@ -14,12 +16,12 @@ void printGraphe(graphe_t *graphe, FILE *sortie) {
         fprintf(sortie, ";");
     }
     fprintf(sortie, "\n");
-    for (int i = 0; i < graphe->nb_auteurs; i++) {
+    for (size_t i = 0; i < graphe->nb_auteurs; i++) {
         fprintf(sortie, "%s;", graphe->liste_auteurs[i]);
     }
     fprintf(sortie, "\n");
     fprintf(sortie, "%ld\n", graphe->nb_titres);
-    for (int i = 0; i < graphe->nb_titres; i++) {
+    for (size_t i = 0; i < graphe->nb_titres; i++) {
         fprintf(sortie, "%s;", graphe->liste_titres[i]);
     }
     fprintf(sortie, "\n");
@@ -153,7 +155,7 @@ void addGraphe(graphe_t *graphe, data_t *data) {
         strcpy(buffer, pointeur);
         strstr(buffer, ";")[0] = '\0';
         liste_auteurs_a_traiter[i] = malloc(strlen(buffer) + 1);
-        for (int j = 0; j < strlen(buffer) + 1; j++) {
+        for (size_t j = 0; j < strlen(buffer) + 1; j++) {
             liste_auteurs_a_traiter[i][j] = buffer[j];
         }
         free(buffer);
@@ -165,8 +167,8 @@ void addGraphe(graphe_t *graphe, data_t *data) {
     indexation_auteur(liste_auteurs_a_traiter, nb_auteurs_a_traiter, graphe,
                       index_auteurs);
 
-    for (int i = 0; i < nb_auteurs_a_traiter; i++) {
-        size_t index_auteur1 = index_auteurs[i];
+    for (int i = 0; i < nb_auteurs_a_traiter - 1; i++) {
+        int index_auteur1 = index_auteurs[i];
         if (index_auteur1 == -1) {
             graphe->liste_auteurs =
                 realloc(graphe->liste_auteurs,
@@ -193,7 +195,7 @@ void addGraphe(graphe_t *graphe, data_t *data) {
                 (graphe->liste_nb_liens[index_auteur1] + 1) * sizeof(size_t));
         }
         for (int j = i + 1; j < nb_auteurs_a_traiter; j++) {
-            size_t index_auteur2 = index_auteurs[j];
+            int index_auteur2 = index_auteurs[j];
             if (index_auteur2 == -1) {
                 graphe->liste_auteurs =
                     realloc(graphe->liste_auteurs,

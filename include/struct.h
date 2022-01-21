@@ -1,6 +1,5 @@
 #ifndef STRUCT_H
 #define STRUCT_H
-#include "xmlp.h"
 #include <stdio.h>
 
 #define STR_LEN_DEF 10000
@@ -29,10 +28,10 @@ typedef struct graphe_t {
 } graphe_t;
 
 typedef struct parser_info_t {
-    void (*handleOpenTag)(char *, void *, data_t *, graphe_t *);
+    void (*handleOpenTag)(char *, void *, data_t *);
     void (*handleCloseTag)(char *, void *, data_t *, graphe_t *, FILE *,
                            long int);
-    void (*handleText)(char *, void *, data_t *, graphe_t *);
+    void (*handleText)(char *, void *, data_t *);
     void *data;
 } parser_info_t;
 

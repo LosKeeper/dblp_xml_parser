@@ -2,9 +2,6 @@
 #define PARSAGE_H
 #include "struct.h"
 
-char lecture = 0;    // equal 1 if we have to read info between 2 tags
-char tag_author = 0; // equal 1 if the current tag is a AUTHOR tag
-char tag_title = 0;  // equal 1 if the current tag is a TITLE tag
 /**
  * @brief Take info between 2 tags
  *
@@ -12,9 +9,8 @@ char tag_title = 0;  // equal 1 if the current tag is a TITLE tag
  * @param data the struct that contains info about parsing and numbers of open
  * and close tags
  * @param xmlData the struct to store the current article informations
- * @param graphe the struct to store the graphe informations
  */
-void handleText(char *txt, void *data, data_t *xmlData, graphe_t *graphe);
+void handleText(char *txt, void *data, data_t *xmlData);
 
 /**
  * @brief Detect an open tag
@@ -23,9 +19,8 @@ void handleText(char *txt, void *data, data_t *xmlData, graphe_t *graphe);
  * @param data the struct that contains info about parsing and numbers of open
  * and close tags
  * @param xmlData the struct to store the current article informations
- * @param graphe the struct to store the graphe informations
  */
-void handleOpenTag(char *tag, void *data, data_t *xmlData, graphe_t *graphe);
+void handleOpenTag(char *tag, void *data, data_t *xmlData);
 
 /**
  * @brief Detect a close tag
@@ -48,8 +43,6 @@ void handleCloseTag(char *tag, void *data, data_t *xmlData, graphe_t *graphe,
  */
 void decode_html(char *encoded_str);
 
-unsigned short pourc_prev = 0; // store the previous rate
-unsigned short pourc_new = 0;  // store the next rate
 /**
  * @brief Print the progress of the parsing of the file
  *
