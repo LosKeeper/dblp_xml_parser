@@ -1,17 +1,10 @@
+#include "arguments.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/errno.h>
 #include <unistd.h>
-
-typedef struct options_t {
-    char *input_database;
-    char *input_binary;
-    char *output_binary;
-    char *auteur1;
-    char *auteur2;
-} options_t;
 
 void print_usage(void) {
     printf(
