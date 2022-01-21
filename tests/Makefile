@@ -2,7 +2,7 @@
 
 TARGET   = tests
 
-CFLAGS=-Wall -Wextra -Werror -g -fprofile-arcs -ftest-coverage
+CFLAGS=-Wall -Wextra -Werror -g -fprofile-arcs -ftest-coverage -fno-stack-protector
 
 LDLIBS=-lm
 
@@ -10,7 +10,7 @@ LDLIBS=-lm
 INCLUDE_PATH = ../include
 
 SRCDIR   = ../src
-OBJDIR   = obj
+OBJDIR   = ../obj
 
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
 INCLUDES := $(wildcard $(INCLUDE_PATH)/*.h)
