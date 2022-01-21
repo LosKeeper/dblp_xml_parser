@@ -9,6 +9,10 @@ Tester tous les malloc et realloc
 Seg Fault decode_html
 
 */
+#include "graphe.h"
+#include "hachage.h"
+#include "parsage.h"
+#include "struct.h"
 #include "xmlp.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,29 +23,6 @@ typedef struct parser_context_t {
     int open_count;
     int close_count;
 } parser_context_t;
-
-char lecture = 0;
-char tag_author = 0;
-char tag_title = 0;
-char structInit = 0;
-unsigned short pourc_prev = 0;
-unsigned short pourc_new = 0;
-
-int max(int a, int b) {
-    if (a >= b) {
-        return a;
-    } else {
-        return b;
-    }
-}
-
-int min(int a, int b) {
-    if (a <= b) {
-        return a;
-    } else {
-        return b;
-    }
-}
 
 unsigned short hache(char *chaine) {
     unsigned int a = 9887;
@@ -64,7 +45,7 @@ void printAvancement(FILE *entree, long int taille_fichier) {
 }
 
 void indexation_auteur(char **liste_auteurs, size_t nb_auteurs,
-                       graphe_type *graphe, int *liste_index_auteurs) {
+                       graphe_t *graphe, int *liste_index_auteurs) {
     for (size_t k = 0; k < nb_auteurs; k++) {
         unsigned int h = hache(liste_auteurs[k]);
         if (graphe->nb_auteurs_hache[h] > 0) {
@@ -111,11 +92,11 @@ void decode_html(char *encoded_str) {
     }
 }
 
-void printDataStrcut(FILE *file, donnees *data) {
+void printDataStrcut(FILE *file, data_t *data) {
     fprintf(file, "%d;%s%s\n", data->nbAuteurs, data->auteurs, data->titre);
 }
 
-void printGraphe(graphe_type *graphe, FILE *sortie) {
+void printGraphe(graphe_t *graphe, FILE *sortie) {
     fprintf(sortie, "%ld\n", graphe->nb_auteurs);
     for (size_t i = 0; i < graphe->nb_auteurs; i++) {
         fprintf(sortie, "%ld;", graphe->liste_nb_liens[i]);
@@ -139,7 +120,7 @@ void printGraphe(graphe_type *graphe, FILE *sortie) {
     fprintf(sortie, "\n");
 }
 
-void importGraphe(graphe_type *graphe, FILE *entree) {
+void importGraphe(graphe_t *graphe, FILE *entree) {
 
     char *buffer = malloc(STR_LEN_DEF);
     char carac_buffer = fgetc(entree);
@@ -247,7 +228,7 @@ void importGraphe(graphe_type *graphe, FILE *entree) {
     }
 }
 
-void addGraphe(graphe_type *graphe, donnees *data) {
+void addGraphe(graphe_t *graphe, data_t *data) {
 
     if (!data->auteurs) {
         goto no_add_graphe;
@@ -353,7 +334,7 @@ void addGraphe(graphe_type *graphe, donnees *data) {
 no_add_graphe:;
 }
 
-void resetDataStruct(donnees *xmlData) {
+void resetDataStruct(data_t *xmlData) {
     free(xmlData->auteurs);
     free(xmlData->titre);
     xmlData->nbAuteurs = 0;
@@ -363,7 +344,7 @@ void resetDataStruct(donnees *xmlData) {
     xmlData->titre[0] = '\0';
 }
 
-void handleText(char *txt, void *data, donnees *xmlData, graphe_type *graphe) {
+void handleText(char *txt, void *data, data_t *xmlData, graphe_t *graphe) {
     parser_context_t *context = data;
     if (lecture) {
         context->text_count++;
@@ -376,8 +357,7 @@ void handleText(char *txt, void *data, donnees *xmlData, graphe_type *graphe) {
     }
 }
 
-void handleOpenTag(char *tag, void *data, donnees *xmlData,
-                   graphe_type *graphe) {
+void handleOpenTag(char *tag, void *data, data_t *xmlData, graphe_t *graphe) {
     parser_context_t *context = data;
     if (!strcmp(tag, "author") || (!strcmp(tag, "title") && tag_author)) {
         context->open_count++;
@@ -391,9 +371,8 @@ void handleOpenTag(char *tag, void *data, donnees *xmlData,
     }
 }
 
-void handleCloseTag(char *tag, void *data, donnees *xmlData,
-                    graphe_type *graphe, FILE *entree,
-                    long int taille_fichier) {
+void handleCloseTag(char *tag, void *data, data_t *xmlData, graphe_t *graphe,
+                    FILE *entree, long int taille_fichier) {
     parser_context_t *context = data;
     if (!strcmp(tag, "author") || (!strcmp(tag, "title"))) {
         context->close_count++;
@@ -410,7 +389,7 @@ void handleCloseTag(char *tag, void *data, donnees *xmlData,
     }
 }
 
-void initData(donnees *xmlData) {
+void initData(data_t *xmlData) {
     xmlData->auteurs = malloc(STR_LEN_DEF);
     xmlData->titre = malloc(STR_LEN_DEF);
     xmlData->auteurs[0] = '\0';
@@ -425,7 +404,7 @@ void initInfo(parser_info_t *info, parser_context_t *context) {
     info->data = &context;
 }
 
-void initGraphe(graphe_type *graphe) {
+void initGraphe(graphe_t *graphe) {
     graphe->liste_auteurs = malloc(sizeof(char *) * STR_LEN_DEF);
     graphe->liste_titres = malloc(sizeof(char *) * STR_LEN_DEF);
     graphe->nb_auteurs = 0;
@@ -442,10 +421,10 @@ int main(int argc, char **argv) {
     if (argc != 3)
         return 2;
 
-    graphe_type graphe;
+    graphe_t graphe;
     initGraphe(&graphe);
 
-    donnees xmlData;
+    data_t xmlData;
     initData(&xmlData);
 
     parser_context_t context = {};
