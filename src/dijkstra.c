@@ -45,8 +45,15 @@ int arriver(int nb_auteur_precedent, int nb_puit, graphe_type* graphe){
 }
 */
 
-char* chemin(int** tableau_dijkstra,int numero_auteur_deux){
-
+char* chemin(int** tableau_dijkstra,int numero_auteur_deux, int cout_chemin){
+    printf("Le coût de ce chemin est de : %d \n", cout_chemin);
+    printf("Le chemin est le suivant : \n");
+    int k=0;
+    int i=numero_auteur_deux;
+    while(k!=cout_chemin){ 
+        printf("%d - ", tableau_dijkstra[i][1]);
+        i=tableau_dijkstra[i][1];
+    }
 }
 
 
@@ -110,6 +117,7 @@ char* dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
                 tableau_dijkstra[0][numero_auteur_buffer]=etape-numero_auteur_un;
                 tableau_dijkstra[0][numero_auteur_deux]=etape-numero_auteur_buffer;       
                 printf("Le coût de ce chemin est de : %d", tableau_dijkstra[numero_auteur_deux][0]);
+                return chemin(tableau_dijkstra, numero_auteur_deux, tableau_dijkstra[numero_auteur_deux][0]);
             }
             else{
                 tableau_dijkstra[0][numero_auteur_buffer]=etape-numero_auteur_buffer_precedent;
