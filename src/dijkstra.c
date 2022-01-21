@@ -116,7 +116,6 @@ char* dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
             if(graphe->liste_sucesseurs[numero_auteur_buffer][k]==numero_auteur_deux){
                 tableau_dijkstra[0][numero_auteur_buffer]=etape-numero_auteur_un;
                 tableau_dijkstra[0][numero_auteur_deux]=etape-numero_auteur_buffer;       
-                printf("Le coût de ce chemin est de : %d", tableau_dijkstra[numero_auteur_deux][0]);
                 return chemin(tableau_dijkstra, numero_auteur_deux, tableau_dijkstra[numero_auteur_deux][0]);
             }
             else{
