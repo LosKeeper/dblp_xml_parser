@@ -18,12 +18,6 @@ Seg Fault decode_html
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct parser_context_t {
-    int text_count;
-    int open_count;
-    int close_count;
-} parser_context_t;
-
 unsigned short hache(char *chaine) {
     unsigned int a = 9887;
     unsigned int b = 49919;
