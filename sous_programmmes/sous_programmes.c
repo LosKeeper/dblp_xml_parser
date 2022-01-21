@@ -42,8 +42,10 @@ int arriver(int nb_auteur_precedent, int nb_puit, graphe_type* graphe){
     return 0;
 }
 
-void affiche_arriver(){
-    printf("On est arrivé\n");
+void affiche_arriver(int** tableau_dijkstra,int numero_auteur_deux){
+    printf("On est arrivé. ");
+    printf("Le chemin est le suivant : \n");
+    printf("%d", tableau_dijkstra[numero_auteur_deux]);
 }
 
 
@@ -111,7 +113,7 @@ int dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
             if(graphe->liste_sucesseurs[numero_auteur_buffer][k]==numero_auteur_deux){
                 tableau_dijkstra[0][numero_auteur_buffer]=etape-numero_auteur_un;
                 tableau_dijkstra[0][numero_auteur_deux]=etape-numero_auteur_buffer;
-                return affiche_arriver;
+                return affiche_arriver(tableau_dijkstra,numero_auteur_deux);
             }
             else{
                 tableau_dijkstra[0][numero_auteur_buffer]=etape-numero_auteur_buffer_precedent;
@@ -119,6 +121,7 @@ int dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
                 numero_auteur_buffer_precedent=numero_auteur_buffer;
             }
         }
+        printf("Aucun chemin n'existe entre l'auteur numéro un et l'auteur numéro deux\n");
     }
     fin_boucle:;
     } 
