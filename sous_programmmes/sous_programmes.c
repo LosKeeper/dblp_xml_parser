@@ -29,7 +29,7 @@ int arriver(int nb_auteur_precedent, int nb_puit, graphe_type* graphe){
     size_t **liste_sucesseurs_buffer=malloc(sizeof(graphe->liste_sucesseurs));
     liste_sucesseurs_buffer=nmbre_separateur_a_sauter(nb_auteur_precedent, graphe);
     int k=0;
-    while(k!=graphe->liste_nb_liens){
+    while(k!=*graphe->liste_nb_liens){
         if(liste_sucesseurs_buffer[nb_auteur_precedent][k]==nb_puit){
             printf("On est arrivé\n");
             return 1;
@@ -42,17 +42,12 @@ int arriver(int nb_auteur_precedent, int nb_puit, graphe_type* graphe){
     return 0;
 }
 
-void affiche_arriver(int** tableau_dijkstra,int numero_auteur_deux){
-    printf("On est arrivé. ");
-    printf("Le chemin est le suivant : \n");
-    printf("%d", tableau_dijkstra[numero_auteur_deux]);
-}
 
-
+char* chemin(int** tableau_dijkstra,int numero_auteur_deux){}
 /** https://github.com/samsonmolou/dijsktra-algorithm/blob/master/main.c */
 
 
-int dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
+char* dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
     int etape_chemin=0;
     int numero_auteur_un=-1;
     int numero_auteur_deux=-1;
@@ -76,13 +71,11 @@ int dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
         }
     if(numero_auteur_un==-1 || numero_auteur_deux==-1){
         printf("L'un des deux auteurs n'existe pas");
-        return 0;
         goto fin_boucle;
     }
     if(graphe->liste_nb_liens[numero_auteur_un]==0 || graphe->liste_nb_liens[numero_auteur_deux]==0){
         printf("L'un des deux auteurs n'a co-écrit aucun récit\n");
         printf("Le chemin le plus court est de 0 (chemin impossible entre les auteurs)");
-        return 0;
         goto fin_boucle;
     }
     }
@@ -113,7 +106,8 @@ int dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
             if(graphe->liste_sucesseurs[numero_auteur_buffer][k]==numero_auteur_deux){
                 tableau_dijkstra[0][numero_auteur_buffer]=etape-numero_auteur_un;
                 tableau_dijkstra[0][numero_auteur_deux]=etape-numero_auteur_buffer;
-                return affiche_arriver(tableau_dijkstra,numero_auteur_deux);
+                printf("On est arrivé. ");
+                printf("Le chemin est le suivant : \n");
             }
             else{
                 tableau_dijkstra[0][numero_auteur_buffer]=etape-numero_auteur_buffer_precedent;
