@@ -44,7 +44,6 @@ int arriver(int nb_auteur_precedent, int nb_puit, graphe_type* graphe){
 
 
 char* chemin(int** tableau_dijkstra,int numero_auteur_deux){}
-/** https://github.com/samsonmolou/dijsktra-algorithm/blob/master/main.c */
 
 
 char* dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
