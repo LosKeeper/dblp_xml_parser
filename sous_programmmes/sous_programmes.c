@@ -42,6 +42,10 @@ int arriver(int nb_auteur_precedent, int nb_puit, graphe_type* graphe){
     return 0;
 }
 
+void affiche_arriver(){
+    printf("On est arrivé\n");
+}
+
 
 /** https://github.com/samsonmolou/dijsktra-algorithm/blob/master/main.c */
 
@@ -92,25 +96,29 @@ int dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
         }
     }
     int etape=0;
-    int numero_auteur_buffer;
     somme=0;
     k=0;
-    int auteur_buffer;
+    int numero_auteur_buffer_precedent=numero_auteur_un;
+    int numero_auteur_buffer;
     int** tableau_dijkstra=malloc(graphe->nb_auteurs);
-    size_t** liste_sucesseurs_buffer=malloc(1000);
     tableau_dijkstra[0][numero_auteur_un]=0-0;
-    while(graphe->liste_nb_liens[numero_auteur_buffer]!=somme){
+    while(graphe->liste_nb_liens[numero_auteur_un]!=somme){
         somme++;
         etape++;
-        auteur_buffer=graphe->liste_sucesseurs[numero_auteur_buffer][0+2*k];
-        liste_sucesseurs_buffer=nmbre_separateur_a_sauter(auteur_buffer, graphe);
-        while(liste_sucesseurs_buffer[k]!=';'){
-            if(graphe->liste_sucesseurs[numero_auteur_buffer][0+2*k]==){
-
+        numero_auteur_buffer=graphe->liste_sucesseurs[numero_auteur_un][k];
+        int somme_buffer=0;
+        while(graphe->liste_nb_liens[numero_auteur_buffer]!=somme_buffer){
+            if(graphe->liste_sucesseurs[numero_auteur_buffer][k]==numero_auteur_deux){
+                tableau_dijkstra[0][numero_auteur_buffer]=etape-numero_auteur_un;
+                tableau_dijkstra[0][numero_auteur_deux]=etape-numero_auteur_buffer;
+                return affiche_arriver;
+            }
+            else{
+                tableau_dijkstra[0][numero_auteur_buffer]=etape-numero_auteur_buffer_precedent;
+                somme_buffer++;
+                numero_auteur_buffer_precedent=numero_auteur_buffer;
             }
         }
     }
     fin_boucle:;
     } 
-
-    
