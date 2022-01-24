@@ -33,6 +33,7 @@ void indexation_auteur(char **liste_auteurs, size_t nb_auteurs,
             graphe->hachage_auteurs[h] =
                 realloc(graphe->hachage_auteurs[h],
                         (graphe->nb_auteurs_hache[h] + 1) * sizeof(size_t));
+            testAlloc(graphe->hachage_auteurs[h]);
             auteurs_nouveaux++;
             graphe->hachage_auteurs[h][graphe->nb_auteurs_hache[h]] =
                 graphe->nb_auteurs + auteurs_nouveaux;
@@ -42,6 +43,7 @@ void indexation_auteur(char **liste_auteurs, size_t nb_auteurs,
             graphe->hachage_auteurs[h] =
                 realloc(graphe->hachage_auteurs[h],
                         (graphe->nb_auteurs_hache[h] + 1) * sizeof(size_t));
+            testAlloc(graphe->hachage_auteurs[h]);
             graphe->hachage_auteurs[h][0] = graphe->nb_auteurs + k;
             graphe->nb_auteurs_hache[h]++;
             liste_index_auteurs[k] = -1;

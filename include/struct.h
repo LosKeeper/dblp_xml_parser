@@ -36,6 +36,12 @@ typedef struct parser_info_t {
 } parser_info_t;
 
 /**
+ * @brief test if memory allocation for a pointer is good
+ * @param pnt a pointer
+ */
+void testAlloc(void *pnt);
+
+/**
  * @brief save a data_t struct into the file named file
  *
  * @param file the file to save the struct informations

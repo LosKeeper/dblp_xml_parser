@@ -31,6 +31,7 @@ void printGraphe(graphe_t *graphe, FILE *sortie) {
 void importGraphe(graphe_t *graphe, FILE *entree) {
 
     char *buffer = malloc(STR_LEN_DEF);
+    testAlloc(buffer);
     char carac_buffer = fgetc(entree);
     uint it = 0;
 
@@ -46,10 +47,13 @@ void importGraphe(graphe_t *graphe, FILE *entree) {
     // graphe->liste_nb_liens
     graphe->liste_nb_liens =
         realloc(graphe->liste_nb_liens, sizeof(size_t) * graphe->nb_auteurs);
+    testAlloc(graphe->liste_nb_liens);
     graphe->liste_sucesseurs = realloc(graphe->liste_sucesseurs,
                                        sizeof(size_t *) * graphe->nb_auteurs);
+    testAlloc(graphe->liste_sucesseurs);
     for (size_t i = 0; i < graphe->nb_auteurs; i++) {
         char *buffer2 = malloc(STR_LEN_DEF);
+        testAlloc(buffer2);
         carac_buffer = fgetc(entree);
         it = 0;
         while (carac_buffer != ';') {
@@ -62,6 +66,7 @@ void importGraphe(graphe_t *graphe, FILE *entree) {
         graphe->liste_sucesseurs[i] =
             realloc(graphe->liste_sucesseurs[i],
                     sizeof(size_t) * graphe->liste_nb_liens[i]);
+        testAlloc(graphe->liste_sucesseurs[i]);
         free(buffer2);
     }
 
@@ -69,6 +74,7 @@ void importGraphe(graphe_t *graphe, FILE *entree) {
     for (size_t i = 0; i < graphe->nb_auteurs; i++) {
         for (size_t j = 0; j < graphe->liste_nb_liens[i]; j++) {
             char *buffer3 = malloc(STR_LEN_DEF);
+            testAlloc(buffer3);
             carac_buffer = fgetc(entree);
             it = 0;
             while (carac_buffer != '|') {
@@ -89,6 +95,7 @@ void importGraphe(graphe_t *graphe, FILE *entree) {
         realloc(graphe->liste_auteurs, sizeof(char *) * graphe->nb_auteurs);
     for (size_t i = 0; i < graphe->nb_auteurs; i++) {
         char *buffer6 = malloc(STR_LEN_DEF);
+        testAlloc(buffer6);
         carac_buffer = fgetc(entree);
         uint it = 0;
         while (carac_buffer != ';') {
@@ -99,6 +106,7 @@ void importGraphe(graphe_t *graphe, FILE *entree) {
         buffer6[it] = '\0';
         it = 0;
         graphe->liste_auteurs[i] = malloc(strlen(buffer6) + 1);
+        testAlloc(graphe->liste_auteurs[i]);
         strcpy(graphe->liste_auteurs[i], buffer6);
         free(buffer6);
     }
@@ -106,6 +114,7 @@ void importGraphe(graphe_t *graphe, FILE *entree) {
 
     // graphe->nb_titres
     char *buffer4 = malloc(STR_LEN_DEF);
+    testAlloc(buffer4);
     carac_buffer = fgetc(entree);
     it = 0;
     while (carac_buffer != '\n') {
@@ -119,8 +128,10 @@ void importGraphe(graphe_t *graphe, FILE *entree) {
     // graphe->liste_titres
     graphe->liste_titres =
         realloc(graphe->liste_titres, sizeof(char *) * graphe->nb_titres);
+    testAlloc(graphe->liste_titres);
     for (size_t i = 0; i < graphe->nb_titres; i++) {
         char *buffer5 = malloc(STR_LEN_DEF);
+        testAlloc(buffer5);
         carac_buffer = fgetc(entree);
         uint it = 0;
         while (carac_buffer != ';') {
@@ -131,6 +142,7 @@ void importGraphe(graphe_t *graphe, FILE *entree) {
         buffer5[it] = '\0';
         it = 0;
         graphe->liste_titres[i] = malloc(strlen(buffer5) + 1);
+        testAlloc(graphe->liste_titres[i]);
         strcpy(graphe->liste_titres[i], buffer5);
         free(buffer5);
     }
@@ -145,7 +157,9 @@ void addGraphe(graphe_t *graphe, data_t *data) {
     // decode_html(data->titre);
     graphe->liste_titres =
         realloc(graphe->liste_titres, sizeof(char *) * (graphe->nb_titres + 1));
+    testAlloc(graphe->liste_titres);
     graphe->liste_titres[graphe->nb_titres] = malloc(strlen(data->titre) + 1);
+    testAlloc(graphe->liste_titres[graphe->nb_titres]);
     strcpy(graphe->liste_titres[graphe->nb_titres], data->titre);
     // graphe->liste_titres[graphe->nb_titres] = strdup(data->titre);
 
@@ -157,6 +171,7 @@ void addGraphe(graphe_t *graphe, data_t *data) {
         strcpy(buffer, pointeur);
         strstr(buffer, ";")[0] = '\0';
         liste_auteurs_a_traiter[i] = malloc(strlen(buffer) + 1);
+        testAlloc(liste_auteurs_a_traiter[i]);
         for (size_t j = 0; j < strlen(buffer) + 1; j++) {
             liste_auteurs_a_traiter[i][j] = buffer[j];
         }
@@ -166,6 +181,7 @@ void addGraphe(graphe_t *graphe, data_t *data) {
 
     int nb_auteurs_a_traiter = data->nbAuteurs;
     int *index_auteurs = malloc(sizeof(int) * nb_auteurs_a_traiter);
+    testAlloc(index_auteurs);
     indexation_auteur(liste_auteurs_a_traiter, nb_auteurs_a_traiter, graphe,
                       index_auteurs);
 
@@ -175,26 +191,32 @@ void addGraphe(graphe_t *graphe, data_t *data) {
             graphe->liste_auteurs =
                 realloc(graphe->liste_auteurs,
                         (graphe->nb_auteurs + 1) * sizeof(char *));
+            testAlloc(graphe->liste_auteurs);
             graphe->liste_auteurs[graphe->nb_auteurs] =
                 malloc(strlen(liste_auteurs_a_traiter[i]) + 1);
+            testAlloc(graphe->liste_auteurs[graphe->nb_auteurs]);
             strcpy(graphe->liste_auteurs[graphe->nb_auteurs],
                    liste_auteurs_a_traiter[i]);
             graphe->liste_sucesseurs =
                 realloc(graphe->liste_sucesseurs,
                         (graphe->nb_auteurs + 1) * sizeof(size_t *));
+            testAlloc(graphe->liste_sucesseurs);
             index_auteur1 = graphe->nb_auteurs;
             index_auteurs[i] = index_auteur1;
             graphe->liste_sucesseurs[index_auteur1] =
                 malloc(2 * sizeof(size_t));
+            testAlloc(graphe->liste_sucesseurs[index_auteur1]);
             graphe->liste_nb_liens =
                 realloc(graphe->liste_nb_liens,
                         (graphe->nb_auteurs + 1) * sizeof(size_t));
+            testAlloc(graphe->liste_nb_liens);
             graphe->liste_nb_liens[index_auteur1] = 0;
             graphe->nb_auteurs++;
         } else {
             graphe->liste_sucesseurs[index_auteur1] = realloc(
                 graphe->liste_sucesseurs[index_auteur1],
                 (graphe->liste_nb_liens[index_auteur1] + 1) * sizeof(size_t));
+            testAlloc(graphe->liste_sucesseurs[index_auteur1]);
         }
         for (int j = i + 1; j < nb_auteurs_a_traiter; j++) {
             int index_auteur2 = index_auteurs[j];
@@ -202,20 +224,25 @@ void addGraphe(graphe_t *graphe, data_t *data) {
                 graphe->liste_auteurs =
                     realloc(graphe->liste_auteurs,
                             (graphe->nb_auteurs + 1) * sizeof(char *));
+                testAlloc(graphe->liste_auteurs);
                 graphe->liste_auteurs[graphe->nb_auteurs] = malloc(
                     sizeof(char) * (strlen(liste_auteurs_a_traiter[j]) + 1));
+                testAlloc(graphe->liste_auteurs[graphe->nb_auteurs]);
                 strcpy(graphe->liste_auteurs[graphe->nb_auteurs],
                        liste_auteurs_a_traiter[j]);
                 graphe->liste_sucesseurs =
                     realloc(graphe->liste_sucesseurs,
                             (graphe->nb_auteurs + 1) * sizeof(size_t *));
+                testAlloc(graphe->liste_sucesseurs);
                 index_auteur2 = graphe->nb_auteurs;
                 index_auteurs[j] = index_auteur2;
                 graphe->liste_sucesseurs[index_auteur2] =
                     malloc(2 * sizeof(size_t));
+                testAlloc(graphe->liste_sucesseurs[index_auteur2]);
                 graphe->liste_nb_liens =
                     realloc(graphe->liste_nb_liens,
                             (graphe->nb_auteurs + 1) * sizeof(size_t));
+                testAlloc(graphe->liste_nb_liens);
                 graphe->liste_nb_liens[index_auteur2] = 0;
                 graphe->nb_auteurs++;
             } else {
@@ -223,10 +250,12 @@ void addGraphe(graphe_t *graphe, data_t *data) {
                     realloc(graphe->liste_sucesseurs[index_auteur2],
                             (graphe->liste_nb_liens[index_auteur2] + 1) *
                                 sizeof(size_t));
+                testAlloc(graphe->liste_sucesseurs[index_auteur2]);
             }
             graphe->liste_sucesseurs[index_auteur1] = realloc(
                 graphe->liste_sucesseurs[index_auteur1],
                 (graphe->liste_nb_liens[index_auteur1] + 1) * sizeof(size_t));
+            testAlloc(graphe->liste_sucesseurs[index_auteur1]);
             graphe->liste_sucesseurs[index_auteur1]
                                     [graphe->liste_nb_liens[index_auteur1]] =
                 index_auteur2;

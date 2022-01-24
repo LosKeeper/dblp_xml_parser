@@ -19,6 +19,7 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
     char carac_buffer = (char)fgetc(entree);
     char previous_carac;
     char *data = malloc(STR_LEN_DEF);
+    testAlloc(data);
     while (carac_buffer != EOF) {
         if (carac_buffer == '<') {
             CptOuvrant++;
@@ -31,9 +32,9 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                 while (carac_buffer != '>') {
                     if (carac_buffer == EOF) {
                         if (CptOuvrant != CptFermant) {
-                            // fprintf(stderr,
-                            //         "Unexpected end of tag (missing '>')");
-                            // free(data);
+                            fprintf(stderr,
+                                    "Unexpected end of tag (missing '>')\n");
+                            free(data);
                             fclose(entree);
                             return ERROR_UNEXPECTED_END_OF_TAG;
                         }
@@ -54,10 +55,10 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                 while (carac_buffer != '>') {
                     if (carac_buffer == EOF) {
                         if (CptOuvrant != CptFermant) {
-                            // fprintf(stderr,
-                            //         "Unexpected end of tag (missing '>')");
+                            fprintf(stderr,
+                                    "Unexpected end of tag (missing '>')\n");
                             fclose(entree);
-                            // free(data);
+                            free(data);
                             return ERROR_UNEXPECTED_END_OF_TAG;
                         }
                         free(data);
@@ -87,8 +88,8 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
             while (carac_buffer != '<') {
                 if (carac_buffer == EOF) {
                     if (CptOuvrant != CptFermant) {
-                        // fprintf(stderr, "Unexpected end of tag (missing
-                        // '>')"); free(data);
+                        fprintf(stderr, "Unexpected end of tag (missing'>')\n");
+                        free(data);
                         fclose(entree);
                         return ERROR_UNEXPECTED_END_OF_TAG;
                     }
