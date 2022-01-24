@@ -46,7 +46,7 @@ char *chemin(int **tableau_dijkstra, int numero_auteur_deux, int cout_chemin) {
     }
 }
 
-char *dijkstra(char *auteur1, char *auteur2, graphe_type *graphe) {
+char *dijkstra(char *auteur1, char *auteur2, graphe_t *graphe) {
     int etape_chemin = 0;
     int numero_auteur_un = -1;
     int numero_auteur_deux = -1;
