@@ -1,8 +1,9 @@
-#include "xmlp.h"
-#include "struct.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "struct.h"
+#include "xmlp.h"
 
 parser_error_type_t parse(const char *filename, parser_info_t *info,
                           data_t *xmlData, graphe_t *graphe) {
@@ -30,11 +31,13 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                 while (carac_buffer != '>') {
                     if (carac_buffer == EOF) {
                         if (CptOuvrant != CptFermant) {
-                            fprintf(stderr,
-                                    "Unexpected end of tag (missing '>')");
+                            // fprintf(stderr,
+                            //         "Unexpected end of tag (missing '>')");
                             // free(data);
+                            fclose(entree);
                             return ERROR_UNEXPECTED_END_OF_TAG;
                         }
+                        fclose(entree);
                         free(data);
                         return PARSER_OK;
                     }
@@ -51,12 +54,14 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                 while (carac_buffer != '>') {
                     if (carac_buffer == EOF) {
                         if (CptOuvrant != CptFermant) {
-                            fprintf(stderr,
-                                    "Unexpected end of tag (missing '>')");
+                            // fprintf(stderr,
+                            //         "Unexpected end of tag (missing '>')");
+                            fclose(entree);
                             // free(data);
                             return ERROR_UNEXPECTED_END_OF_TAG;
                         }
                         free(data);
+                        fclose(entree);
                         return PARSER_OK;
                     }
                     if (carac_buffer == ' ') {
@@ -82,11 +87,13 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
             while (carac_buffer != '<') {
                 if (carac_buffer == EOF) {
                     if (CptOuvrant != CptFermant) {
-                        fprintf(stderr, "Unexpected end of tag (missing '>')");
-                        // free(data);
+                        // fprintf(stderr, "Unexpected end of tag (missing
+                        // '>')"); free(data);
+                        fclose(entree);
                         return ERROR_UNEXPECTED_END_OF_TAG;
                     }
                     free(data);
+                    fclose(entree);
                     return PARSER_OK;
                 }
                 data[it] = carac_buffer;
@@ -103,5 +110,6 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
     passe_fgetc:;
     }
     free(data);
+    fclose(entree);
     return PARSER_OK;
 }

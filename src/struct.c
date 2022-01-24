@@ -1,7 +1,8 @@
-#include "struct.h"
-#include "parsage.h"
 #include <stdlib.h>
 #include <string.h>
+
+#include "parsage.h"
+#include "struct.h"
 
 void initData(data_t *xmlData) {
     xmlData->auteurs = malloc(STR_LEN_DEF);

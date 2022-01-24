@@ -1,14 +1,17 @@
+// utilser memcpy
+
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
 #include "arguments.h"
 #include "graphe.h"
 #include "hachage.h"
 #include "parsage.h"
 #include "struct.h"
 #include "xmlp.h"
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
 void signalHandler(int signal) {
     if (signal == SIGINT) {
@@ -42,8 +45,6 @@ int main(int argc, char **argv) {
     FILE *sortie = fopen(argv[2], "w");
 
     parse(argv[1], &info, &xmlData, &graphe);
-    // FILE *entree = fopen(argv[1], "r");
-    // importGraphe(&graphe, entree);
     printGraphe(&graphe, sortie);
     return 0;
 }

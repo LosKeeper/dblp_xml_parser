@@ -1,10 +1,11 @@
-#include "arguments.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/errno.h>
 #include <unistd.h>
+
+#include "arguments.h"
 
 void print_usage(void) {
     printf(

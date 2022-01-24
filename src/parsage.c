@@ -1,8 +1,9 @@
-#include "parsage.h"
+#include <string.h>
+
 #include "graphe.h"
+#include "parsage.h"
 #include "struct.h"
 #include "xmlp.h"
-#include <string.h>
 
 char lecture = 0;              // equal 1 if we have to read info between 2 tags
 char tag_author = 0;           // equal 1 if the current tag is a AUTHOR tag
@@ -18,7 +19,8 @@ void handleText(char *txt, void *data, data_t *xmlData) {
             strcat(xmlData->titre, txt);
         } else if (tag_author) {
             decode_html(txt);
-            strcat(xmlData->auteurs, strcat(txt, ";"));
+            strcat(xmlData->auteurs, txt);
+            strcat(xmlData->auteurs, ";");
         }
     }
 }

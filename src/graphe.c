@@ -1,7 +1,8 @@
-#include "graphe.h"
-#include "hachage.h"
 #include <stdlib.h>
 #include <string.h>
+
+#include "graphe.h"
+#include "hachage.h"
 
 void printGraphe(graphe_t *graphe, FILE *sortie) {
     fprintf(sortie, "%ld\n", graphe->nb_auteurs);
@@ -146,6 +147,7 @@ void addGraphe(graphe_t *graphe, data_t *data) {
         realloc(graphe->liste_titres, sizeof(char *) * (graphe->nb_titres + 1));
     graphe->liste_titres[graphe->nb_titres] = malloc(strlen(data->titre) + 1);
     strcpy(graphe->liste_titres[graphe->nb_titres], data->titre);
+    // graphe->liste_titres[graphe->nb_titres] = strdup(data->titre);
 
     // Création d'une liste des auteurs a traiter
     char **liste_auteurs_a_traiter = malloc(sizeof(char *) * data->nbAuteurs);

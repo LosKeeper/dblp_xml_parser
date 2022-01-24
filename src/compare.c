@@ -1,7 +1,8 @@
-#include "compare.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "compare.h"
 
 int compareFile(char *file1, char *file2) {
     char command[50];

@@ -1,6 +1,7 @@
-#include "hachage.h"
 #include <stdlib.h>
 #include <string.h>
+
+#include "hachage.h"
 
 unsigned int hache(char *chaine) {
     unsigned int a = 9887;
