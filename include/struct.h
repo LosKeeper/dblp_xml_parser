@@ -2,7 +2,7 @@
 #define STRUCT_H
 #include <stdio.h>
 
-#define STR_LEN_DEF 10000
+#define STR_LEN_DEF 100000
 
 typedef struct parser_context_t {
     int text_count;
@@ -20,6 +20,8 @@ typedef struct graphe_t {
     char **liste_auteurs;
     size_t nb_auteurs;
     char **liste_titres;
+    size_t **liste_titres_auteurs;
+    size_t *nb_titres_auteurs;
     size_t nb_titres;
     size_t **liste_sucesseurs;
     size_t *liste_nb_liens;

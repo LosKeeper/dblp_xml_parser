@@ -1,5 +1,3 @@
-// utilser memcpy
-
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,11 +11,17 @@
 #include "struct.h"
 #include "xmlp.h"
 
+unsigned short nbSignal = 0;
+
 void signalHandler(int signal) {
     if (signal == SIGINT) {
-        static unsigned short nbSignal = 0;
         nbSignal++;
-        printf("Signal Ctrl^c n°%i reçu\n", nbSignal);
+        printf("Signal Ctrl^c n°%i reçu, processus tué au bout de 5 signaux "
+               "reçus\n",
+               nbSignal);
+        if (nbSignal == 5) {
+            exit(2);
+        }
     }
 }
 

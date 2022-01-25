@@ -7,7 +7,7 @@
 void testAlloc(void *pnt) {
     if (!pnt) {
         fprintf(stderr, "Memory Allocation Error\n");
-        exit(42);
+        exit(1);
     }
 }
 
@@ -45,14 +45,18 @@ void initGraphe(graphe_t *graphe) {
     testAlloc(graphe->liste_auteurs);
     graphe->liste_titres = malloc(sizeof(char *) * STR_LEN_DEF);
     testAlloc(graphe->liste_titres);
+    graphe->liste_titres_auteurs = malloc(sizeof(size_t *) * STR_LEN_DEF);
+    testAlloc(graphe->liste_titres_auteurs);
+    graphe->nb_titres_auteurs = malloc(sizeof(size_t) * STR_LEN_DEF);
+    testAlloc(graphe->nb_titres_auteurs);
     graphe->nb_auteurs = 0;
     graphe->nb_titres = 0;
-    graphe->liste_sucesseurs = malloc(sizeof(int *) * STR_LEN_DEF);
+    graphe->liste_sucesseurs = malloc(sizeof(size_t *) * STR_LEN_DEF);
     testAlloc(graphe->liste_sucesseurs);
-    graphe->liste_nb_liens = malloc(sizeof(int) * STR_LEN_DEF);
+    graphe->liste_nb_liens = malloc(sizeof(size_t) * STR_LEN_DEF);
     testAlloc(graphe->liste_nb_liens);
     memset(graphe->nb_auteurs_hache, 0, sizeof(graphe->nb_auteurs_hache));
-    for (int i = 0; i < 100000; i++) {
+    for (size_t i = 0; i < 100000; i++) {
         graphe->hachage_auteurs[i] = malloc(sizeof(size_t));
         testAlloc(graphe->hachage_auteurs);
     }

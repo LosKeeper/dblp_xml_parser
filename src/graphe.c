@@ -201,15 +201,27 @@ void addGraphe(graphe_t *graphe, data_t *data) {
                 realloc(graphe->liste_sucesseurs,
                         (graphe->nb_auteurs + 1) * sizeof(size_t *));
             testAlloc(graphe->liste_sucesseurs);
+            graphe->liste_titres_auteurs =
+                realloc(graphe->liste_titres_auteurs,
+                        (graphe->nb_auteurs + 1) * sizeof(size_t *));
+            testAlloc(graphe->liste_titres_auteurs);
             index_auteur1 = graphe->nb_auteurs;
             index_auteurs[i] = index_auteur1;
-            graphe->liste_sucesseurs[index_auteur1] =
-                malloc(2 * sizeof(size_t));
+            graphe->liste_sucesseurs[index_auteur1] = malloc(sizeof(size_t));
             testAlloc(graphe->liste_sucesseurs[index_auteur1]);
+            graphe->liste_titres_auteurs[index_auteur1] =
+                malloc(sizeof(size_t));
+            testAlloc(graphe->liste_titres_auteurs[index_auteur1]);
+            graphe->liste_titres_auteurs[index_auteur1][0] = graphe->nb_titres;
             graphe->liste_nb_liens =
                 realloc(graphe->liste_nb_liens,
                         (graphe->nb_auteurs + 1) * sizeof(size_t));
             testAlloc(graphe->liste_nb_liens);
+            graphe->nb_titres_auteurs =
+                realloc(graphe->nb_titres_auteurs,
+                        (graphe->nb_auteurs + 1) * sizeof(size_t));
+            testAlloc(graphe->nb_titres_auteurs);
+            graphe->nb_titres_auteurs[index_auteur1]++;
             graphe->liste_nb_liens[index_auteur1] = 0;
             graphe->nb_auteurs++;
         } else {
@@ -217,6 +229,14 @@ void addGraphe(graphe_t *graphe, data_t *data) {
                 graphe->liste_sucesseurs[index_auteur1],
                 (graphe->liste_nb_liens[index_auteur1] + 1) * sizeof(size_t));
             testAlloc(graphe->liste_sucesseurs[index_auteur1]);
+            graphe->liste_titres_auteurs[index_auteur1] =
+                realloc(graphe->liste_titres_auteurs[index_auteur1],
+                        (graphe->nb_titres_auteurs[index_auteur1] + 1) *
+                            sizeof(size_t));
+            testAlloc(graphe->liste_titres_auteurs[index_auteur1]);
+            graphe->liste_titres_auteurs
+                [index_auteur1][graphe->nb_titres_auteurs[index_auteur1] + 1] =
+                graphe->nb_titres;
         }
         for (int j = i + 1; j < nb_auteurs_a_traiter; j++) {
             int index_auteur2 = index_auteurs[j];
@@ -237,7 +257,7 @@ void addGraphe(graphe_t *graphe, data_t *data) {
                 index_auteur2 = graphe->nb_auteurs;
                 index_auteurs[j] = index_auteur2;
                 graphe->liste_sucesseurs[index_auteur2] =
-                    malloc(2 * sizeof(size_t));
+                    malloc(sizeof(size_t));
                 testAlloc(graphe->liste_sucesseurs[index_auteur2]);
                 graphe->liste_nb_liens =
                     realloc(graphe->liste_nb_liens,

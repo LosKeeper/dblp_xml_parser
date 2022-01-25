@@ -59,6 +59,9 @@ void handleCloseTag(char *tag, void *data, data_t *xmlData, graphe_t *graphe,
 
 void decode_html(char *encoded_str) {
     char *pnt = strstr(encoded_str, "&");
+    if (pnt == NULL) {
+        return;
+    }
     while (strstr(encoded_str, ";")) {
         pnt[0] = pnt[1];
         char *ptvirgule = strstr(encoded_str, ";");
