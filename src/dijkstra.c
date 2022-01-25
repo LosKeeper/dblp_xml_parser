@@ -44,8 +44,9 @@ int arriver(int nb_auteur_precedent, int nb_puit, graphe_type* graphe){
     return 0;
 }
 */
+char* str_cat(){}
 
-char* chemin(int** tableau_dijkstra,int numero_auteur_deux, int cout_chemin){
+void chemin(int** tableau_dijkstra,int numero_auteur_deux, int cout_chemin){
     printf("Le coût de ce chemin est de : %d \n", cout_chemin);
     printf("Le chemin est le suivant : \n");
     int k=0;
@@ -53,6 +54,44 @@ char* chemin(int** tableau_dijkstra,int numero_auteur_deux, int cout_chemin){
     while(k!=cout_chemin){ 
         printf("%d - ", tableau_dijkstra[i][1]);
         i=tableau_dijkstra[i][1];
+    }
+}
+
+void comparer_auteurs(char* auteur1, char* auteur2){
+    if(!strcmp(auteur1, auteur2)){
+        printf("C'est le même auteur. \n");
+        printf("Le chemin le plus court est de 0 boucle sur lui même)."); 
+    }
+}
+
+void existence_auteur(int numero_auteur_un, int numero_auteur_deux){
+    if(numero_auteur_un==-1){
+        printf("L'auteur source (auteur un) n'existe pas dans cette base de donnée.\n");
+    }
+    else if(numero_auteur_deux==-1){
+    printf("L'auteur puit (auteur deux) n'existe pas dans cette base de donnée.\n");
+    }
+}
+
+void existence_coecriture(int numero_auteur_un, int numero_auteur_deux,graphe_type graphe){
+    if(graphe.liste_nb_liens[numero_auteur_un]==0){
+        printf("L'auteur source (auteur un) n'a co-écrit aucun récit. ");
+        printf("Le chemin le plus court est de 0 (chemin impossible entre les auteurs.\n)");
+    }
+    if((graphe.liste_nb_liens[numero_auteur_deux]==0)){
+            printf("L'auteur puit (auteur deux) n'a co-écrit aucun récit. ");
+            printf("Le chemin le plus court est de 0 (chemin impossible entre les auteurs\n)");
+    }
+}
+
+void existence_lien_direct(int numero_auteur_un, int numero_auteur_deux,graphe_type graphe){
+    int somme=0;
+    int k=0;
+    while(somme!=graphe.liste_nb_liens[numero_auteur_un]){
+        if(graphe.liste_sucesseurs[numero_auteur_un][k]==numero_auteur_deux){
+            printf("Le chemin les plus court est de 1. ");
+            printf("Il existe un lien direct entre la source et le puit\n");
+        }
     }
 }
 
@@ -116,7 +155,7 @@ char* dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
             if(graphe->liste_sucesseurs[numero_auteur_buffer][k]==numero_auteur_deux){
                 tableau_dijkstra[0][numero_auteur_buffer]=etape-numero_auteur_un;
                 tableau_dijkstra[0][numero_auteur_deux]=etape-numero_auteur_buffer;       
-                return chemin(tableau_dijkstra, numero_auteur_deux, tableau_dijkstra[numero_auteur_deux][0]);
+                chemin(tableau_dijkstra, numero_auteur_deux, tableau_dijkstra[numero_auteur_deux][0]);
             }
             else{
                 tableau_dijkstra[0][numero_auteur_buffer]=etape-numero_auteur_buffer_precedent;
