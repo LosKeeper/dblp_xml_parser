@@ -4,7 +4,8 @@
 #include "graphe.h"
 #include "hachage.h"
 
-void findTitleFromAutor(graphe_t *graphe, char *author_name) {
+void findTitleFromAuthor(graphe_t *graphe, char *author_name) {
+    // find the index of the author
     size_t index_author = 0;
     for (size_t k = 0; k < graphe->nb_auteurs; k++) {
         if (!strcmp(graphe->liste_auteurs[k], author_name)) {
@@ -12,8 +13,12 @@ void findTitleFromAutor(graphe_t *graphe, char *author_name) {
             goto end_index_search;
         }
     }
+    fprintf(stderr, "No author named %s find in the database\n", author_name);
+    exit(2);
 
 end_index_search:;
+    // search for the index for every article on the graphe
+    fprintf(stdout, "Articles from %s :\n", author_name);
     for (size_t i = 0; i < graphe->nb_titres; i++) {
         char *pnt = strstr(graphe->liste_titres[i], "|");
         while (pnt != NULL) {

@@ -31,6 +31,6 @@ void importGraphe(graphe_t *graphe, FILE *entree);
  * @param graphe the struct to store the graphe informations
  * @param author_name the name of the author
  */
-void findTitleFromAutor(graphe_t *graphe, char *author_name);
+void findTitleFromAuthor(graphe_t *graphe, char *author_name);
 
 #endif

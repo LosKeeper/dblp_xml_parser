@@ -5,6 +5,7 @@ typedef struct options_t {
     char *input_database;
     char *input_binary;
     char *output_binary;
+    char *auteur;
     char *auteur1;
     char *auteur2;
 } options_t;

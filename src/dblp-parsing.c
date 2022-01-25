@@ -26,8 +26,6 @@ void signalHandler(int signal) {
 }
 
 int main(int argc, char **argv) {
-    if (argc != 3)
-        return 2;
 
     struct sigaction action;
     struct sigaction oldAction;
@@ -36,20 +34,28 @@ int main(int argc, char **argv) {
     action.sa_flags = SA_RESTART;
     sigaction(SIGINT, &action, &oldAction);
 
-    graphe_t graphe;
-    initGraphe(&graphe);
+    options_t options;
+    parseArgs(argc, argv, &options);
+    // cleanOptions(&options);
 
-    data_t xmlData;
-    initData(&xmlData);
-
-    parser_context_t context = {};
-    parser_info_t info;
-    initInfo(&info, &context);
-
-    FILE *sortie = fopen(argv[2], "w");
-
-    parse(argv[1], &info, &xmlData, &graphe);
-    printGraphe(&graphe, sortie);
-    findTitleFromAutor(&graphe, "Frank Manola");
     return 0;
+
+    /* AVANT
+        graphe_t graphe;
+        initGraphe(&graphe);
+
+        data_t xmlData;
+        initData(&xmlData);
+
+        parser_context_t context = {};
+        parser_info_t info;
+        initInfo(&info, &context);
+
+        FILE *sortie = fopen(argv[2], "w");
+
+        parse(argv[1], &info, &xmlData, &graphe);
+        printGraphe(&graphe, sortie);
+        findTitleFromAuthor(&graphe, "Frank Manola");
+        return 0;
+        */
 }

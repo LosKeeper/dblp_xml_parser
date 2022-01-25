@@ -1,6 +1,6 @@
 CC ?= gcc
 CFLAGS ?= -Wall -Wextra -Werror -g
-LDLIBS ?=
+LDLIBS ?=-lm
 
 INCLUDE_PATH = ./include
 

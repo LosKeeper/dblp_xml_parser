@@ -11,10 +11,10 @@ int compareFile(char *file1, char *file2) {
     strcat(command, " ");
     strcat(command, file2);
     if (!system(command)) {
-        fprintf(stderr, "Same files\n");
+        fprintf(stderr, "OK !\n");
         return 0;
     } else {
-        fprintf(stderr, "Files are differents\n");
+        fprintf(stderr, "Not OK !\n");
         return 1;
     }
 }

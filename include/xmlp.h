@@ -1,7 +1,6 @@
 #ifndef XMLP_HEADER
 #define XMLP_HEADER
 
-#define STR_LEN_DEF 10000
 #include "struct.h"
 typedef enum parser_error_type_t {
     PARSER_OK,

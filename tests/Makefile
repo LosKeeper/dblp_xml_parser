@@ -1,13 +1,10 @@
-
-
-TARGET   = tests
-
-CFLAGS=-Wall -Wextra -Werror -g -fprofile-arcs -ftest-coverage -fno-stack-protector
-
+CC ?= gcc
+CFLAGS ?= -Wall -Wextra -Werror -g -fprofile-arcs -ftest-coverage -fno-stack-protector
 LDLIBS=-lm
 
-
 INCLUDE_PATH = ../include
+
+TARGET   = tests
 
 SRCDIR   = ../src
 OBJDIR   = ../obj
@@ -15,27 +12,22 @@ OBJDIR   = ../obj
 SOURCES  := $(wildcard $(SRCDIR)/*.c)
 INCLUDES := $(wildcard $(INCLUDE_PATH)/*.h)
 OBJECTS0  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-OBJECTS = $(filter-out $(OBJDIR)/bmp-msg.o,$(OBJECTS0))
+OBJECTS = $(filter-out $(OBJDIR)/dblp-parsing.o,$(OBJECTS0))
 
 
 
-tests: $(OBJECTS) obj/tests.o
+tests: $(OBJECTS) ../obj/tests.o
 
 	$(CC) -o $@ $^ $(CFLAGS) $(LDLIBS)
 	@echo "Linking complete!"
 
-
-cov: clean tests
-	valgrind --leak-check=full --show-leak-kinds=all -s ./$(TARGET)
-	lcov -d obj -c -o rapport.info
-	genhtml -o rapport -t "Couverture" rapport.info
 
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	mkdir -p $(OBJDIR)
 	$(CC) -o $@ -c $< $(CFLAGS) -I$(INCLUDE_PATH)
 
-obj/tests.o: tests.c
+../obj/tests.o: tests.c
 	$(CC) -o $@ -c $< $(CFLAGS) -I$(INCLUDE_PATH)
 
 
