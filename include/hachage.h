@@ -10,7 +10,7 @@
 
  * @return a number modulo 100 000 that correspond to the string
  */
-unsigned short hache(char *chaine);
+unsigned int hache(char *chaine);
 
 /**
  * @brief Index all the autors from liste_auteurs into the hache table in graphe

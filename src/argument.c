@@ -1,10 +1,11 @@
-#include "arguments.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/errno.h>
 #include <unistd.h>
+
+#include "arguments.h"
 
 void print_usage(void) {
     printf(
@@ -27,11 +28,11 @@ void print_usage(void) {
 
 void cleanOptions(options_t *options) {
     if (options->input_database)
-        fclose(options->input_database);
+        free(options->input_database);
     if (options->input_binary)
-        fclose(options->input_binary);
+        free(options->input_binary);
     if (options->output_binary)
-        fclose(options->output_binary);
+        free(options->output_binary);
     free(options);
 }
 

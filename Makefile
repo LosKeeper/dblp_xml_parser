@@ -1,6 +1,6 @@
 CC ?= gcc
 CFLAGS ?= -Wall -Wextra -Werror -g
-LDLIBS?=-lm -ltps -lSDL2 -lSDL2_ttf
+LDLIBS ?=
 
 INCLUDE_PATH = ./include
 
@@ -21,7 +21,7 @@ $(BINDIR)/$(TARGET): $(OBJECTS)
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(INCLUDES)
 	mkdir -p $(OBJDIR)
-	$(CC) -o $@ -c $< $(CFLAGS) -I$(INCLUDE_PATH)
+	$(CC) -o $@ -c $< $(CFLAGS) -isystem$(INCLUDE_PATH)
 
 
 .PHONY: clean cov

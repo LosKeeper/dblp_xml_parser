@@ -1,7 +1,9 @@
-#include "xmlp.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "struct.h"
+#include "xmlp.h"
 
 parser_error_type_t parse(const char *filename, parser_info_t *info,
                           data_t *xmlData, graphe_t *graphe) {
@@ -17,6 +19,7 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
     char carac_buffer = (char)fgetc(entree);
     char previous_carac;
     char *data = malloc(STR_LEN_DEF);
+    testAlloc(data);
     while (carac_buffer != EOF) {
         if (carac_buffer == '<') {
             CptOuvrant++;
@@ -28,13 +31,15 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                 carac_buffer = (char)fgetc(entree);
                 while (carac_buffer != '>') {
                     if (carac_buffer == EOF) {
-                        /*if (CptOuvrant != CptFermant) {
+                        if (CptOuvrant != CptFermant) {
                             fprintf(stderr,
-                                    "Unexpected end of tag (missing '>')");
+                                    "Unexpected end of tag (missing '>')\n");
                             free(data);
+                            fclose(entree);
                             return ERROR_UNEXPECTED_END_OF_TAG;
-                        }*/
-                        // free(data);
+                        }
+                        fclose(entree);
+                        free(data);
                         return PARSER_OK;
                     }
                     data[it] = carac_buffer;
@@ -49,13 +54,15 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
             } else {
                 while (carac_buffer != '>') {
                     if (carac_buffer == EOF) {
-                        /*if (CptOuvrant != CptFermant) {
+                        if (CptOuvrant != CptFermant) {
                             fprintf(stderr,
-                                    "Unexpected end of tag (missing '>')");
+                                    "Unexpected end of tag (missing '>')\n");
+                            fclose(entree);
                             free(data);
                             return ERROR_UNEXPECTED_END_OF_TAG;
-                        }*/
-                        // free(data);
+                        }
+                        free(data);
+                        fclose(entree);
                         return PARSER_OK;
                     }
                     if (carac_buffer == ' ') {
@@ -74,18 +81,20 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                 }
                 CptFermant++;
                 data[it] = '\0';
-                info->handleOpenTag(data, info->data, xmlData, graphe);
+                info->handleOpenTag(data, info->data, xmlData);
             }
         } else {
             int it = 0;
             while (carac_buffer != '<') {
                 if (carac_buffer == EOF) {
-                    /*if (CptOuvrant != CptFermant) {
-                        fprintf(stderr, "Unexpected end of tag (missing '>')");
+                    if (CptOuvrant != CptFermant) {
+                        fprintf(stderr, "Unexpected end of tag (missing'>')\n");
                         free(data);
+                        fclose(entree);
                         return ERROR_UNEXPECTED_END_OF_TAG;
-                    }*/
-                    // free(data);
+                    }
+                    free(data);
+                    fclose(entree);
                     return PARSER_OK;
                 }
                 data[it] = carac_buffer;
@@ -94,13 +103,14 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                 it++;
             }
             data[it] = '\0';
-            info->handleText(data, info->data, xmlData, graphe);
+            info->handleText(data, info->data, xmlData);
             goto passe_fgetc;
         }
         previous_carac = carac_buffer;
         carac_buffer = (char)fgetc(entree);
     passe_fgetc:;
     }
-    // free(data);
+    free(data);
+    fclose(entree);
     return PARSER_OK;
 }

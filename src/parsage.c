@@ -1,7 +1,17 @@
+#include <string.h>
+
+#include "graphe.h"
 #include "parsage.h"
+#include "struct.h"
 #include "xmlp.h"
 
-void handleText(char *txt, void *data, data_t *xmlData, graphe_t *graphe) {
+char lecture = 0;              // equal 1 if we have to read info between 2 tags
+char tag_author = 0;           // equal 1 if the current tag is a AUTHOR tag
+char tag_title = 0;            // equal 1 if the current tag is a TITLE tag
+unsigned short pourc_prev = 0; // store the previous rate
+unsigned short pourc_new = 0;  // store the next rate
+
+void handleText(char *txt, void *data, data_t *xmlData) {
     parser_context_t *context = data;
     if (lecture) {
         context->text_count++;
@@ -9,12 +19,13 @@ void handleText(char *txt, void *data, data_t *xmlData, graphe_t *graphe) {
             strcat(xmlData->titre, txt);
         } else if (tag_author) {
             decode_html(txt);
-            strcat(xmlData->auteurs, strcat(txt, ";"));
+            strcat(xmlData->auteurs, txt);
+            strcat(xmlData->auteurs, ";");
         }
     }
 }
 
-void handleOpenTag(char *tag, void *data, data_t *xmlData, graphe_t *graphe) {
+void handleOpenTag(char *tag, void *data, data_t *xmlData) {
     parser_context_t *context = data;
     if (!strcmp(tag, "author") || (!strcmp(tag, "title") && tag_author)) {
         context->open_count++;
