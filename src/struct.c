@@ -45,10 +45,6 @@ void initGraphe(graphe_t *graphe) {
     testAlloc(graphe->liste_auteurs);
     graphe->liste_titres = malloc(sizeof(char *) * STR_LEN_DEF);
     testAlloc(graphe->liste_titres);
-    graphe->liste_titres_auteurs = malloc(sizeof(size_t *) * STR_LEN_DEF);
-    testAlloc(graphe->liste_titres_auteurs);
-    graphe->nb_titres_auteurs = malloc(sizeof(size_t) * STR_LEN_DEF);
-    testAlloc(graphe->nb_titres_auteurs);
     graphe->nb_auteurs = 0;
     graphe->nb_titres = 0;
     graphe->liste_sucesseurs = malloc(sizeof(size_t *) * STR_LEN_DEF);

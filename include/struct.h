@@ -20,8 +20,6 @@ typedef struct graphe_t {
     char **liste_auteurs;
     size_t nb_auteurs;
     char **liste_titres;
-    size_t **liste_titres_auteurs;
-    size_t *nb_titres_auteurs;
     size_t nb_titres;
     size_t **liste_sucesseurs;
     size_t *liste_nb_liens;

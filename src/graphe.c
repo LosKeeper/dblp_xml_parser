@@ -185,7 +185,7 @@ void addGraphe(graphe_t *graphe, data_t *data) {
     indexation_auteur(liste_auteurs_a_traiter, nb_auteurs_a_traiter, graphe,
                       index_auteurs);
 
-    for (int i = 0; i < nb_auteurs_a_traiter - 1; i++) {
+    for (int i = 0; i < nb_auteurs_a_traiter; i++) {
         int index_auteur1 = index_auteurs[i];
         if (index_auteur1 == -1) {
             graphe->liste_auteurs =
@@ -201,27 +201,14 @@ void addGraphe(graphe_t *graphe, data_t *data) {
                 realloc(graphe->liste_sucesseurs,
                         (graphe->nb_auteurs + 1) * sizeof(size_t *));
             testAlloc(graphe->liste_sucesseurs);
-            graphe->liste_titres_auteurs =
-                realloc(graphe->liste_titres_auteurs,
-                        (graphe->nb_auteurs + 1) * sizeof(size_t *));
-            testAlloc(graphe->liste_titres_auteurs);
             index_auteur1 = graphe->nb_auteurs;
             index_auteurs[i] = index_auteur1;
             graphe->liste_sucesseurs[index_auteur1] = malloc(sizeof(size_t));
             testAlloc(graphe->liste_sucesseurs[index_auteur1]);
-            graphe->liste_titres_auteurs[index_auteur1] =
-                malloc(sizeof(size_t));
-            testAlloc(graphe->liste_titres_auteurs[index_auteur1]);
-            graphe->liste_titres_auteurs[index_auteur1][0] = graphe->nb_titres;
             graphe->liste_nb_liens =
                 realloc(graphe->liste_nb_liens,
                         (graphe->nb_auteurs + 1) * sizeof(size_t));
             testAlloc(graphe->liste_nb_liens);
-            graphe->nb_titres_auteurs =
-                realloc(graphe->nb_titres_auteurs,
-                        (graphe->nb_auteurs + 1) * sizeof(size_t));
-            testAlloc(graphe->nb_titres_auteurs);
-            graphe->nb_titres_auteurs[index_auteur1]++;
             graphe->liste_nb_liens[index_auteur1] = 0;
             graphe->nb_auteurs++;
         } else {
@@ -229,14 +216,6 @@ void addGraphe(graphe_t *graphe, data_t *data) {
                 graphe->liste_sucesseurs[index_auteur1],
                 (graphe->liste_nb_liens[index_auteur1] + 1) * sizeof(size_t));
             testAlloc(graphe->liste_sucesseurs[index_auteur1]);
-            graphe->liste_titres_auteurs[index_auteur1] =
-                realloc(graphe->liste_titres_auteurs[index_auteur1],
-                        (graphe->nb_titres_auteurs[index_auteur1] + 1) *
-                            sizeof(size_t));
-            testAlloc(graphe->liste_titres_auteurs[index_auteur1]);
-            graphe->liste_titres_auteurs
-                [index_auteur1][graphe->nb_titres_auteurs[index_auteur1] + 1] =
-                graphe->nb_titres;
         }
         for (int j = i + 1; j < nb_auteurs_a_traiter; j++) {
             int index_auteur2 = index_auteurs[j];
@@ -263,6 +242,7 @@ void addGraphe(graphe_t *graphe, data_t *data) {
                     realloc(graphe->liste_nb_liens,
                             (graphe->nb_auteurs + 1) * sizeof(size_t));
                 testAlloc(graphe->liste_nb_liens);
+
                 graphe->liste_nb_liens[index_auteur2] = 0;
                 graphe->nb_auteurs++;
             } else {
@@ -285,6 +265,17 @@ void addGraphe(graphe_t *graphe, data_t *data) {
             graphe->liste_nb_liens[index_auteur1]++;
             graphe->liste_nb_liens[index_auteur2]++;
         }
+        graphe->liste_titres[graphe->nb_titres] = realloc(
+            graphe->liste_titres[graphe->nb_titres],
+            sizeof(graphe->liste_titres[graphe->nb_titres]) + STR_LEN_DEF);
+        strcat(graphe->liste_titres[graphe->nb_titres], "|");
+        char *str_index1 = malloc(STR_LEN_DEF);
+        sprintf(str_index1, "%d", index_auteur1);
+        strcat(graphe->liste_titres[graphe->nb_titres], str_index1);
+        free(str_index1);
+        graphe->liste_titres[graphe->nb_titres] =
+            realloc(graphe->liste_titres[graphe->nb_titres],
+                    strlen(graphe->liste_titres[graphe->nb_titres]) + 1);
     }
     graphe->nb_titres++;
     free(liste_auteurs_a_traiter);
