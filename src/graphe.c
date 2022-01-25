@@ -4,6 +4,36 @@
 #include "graphe.h"
 #include "hachage.h"
 
+void findTitleFromAutor(graphe_t *graphe, char *author_name) {
+    size_t index_author = 0;
+    for (size_t k = 0; k < graphe->nb_auteurs; k++) {
+        if (!strcmp(graphe->liste_auteurs[k], author_name)) {
+            index_author = k;
+            goto end_index_search;
+        }
+    }
+
+end_index_search:;
+    for (size_t i = 0; i < graphe->nb_titres; i++) {
+        char *pnt = strstr(graphe->liste_titres[i], "|");
+        while (pnt != NULL) {
+            char *str_index = malloc(STR_LEN_DEF);
+            testAlloc(str_index);
+            uint j = 1;
+            while (pnt[j] != '|' && pnt[j] != ';' && pnt[j]) {
+                str_index[j - 1] = pnt[j];
+                j++;
+            }
+            str_index[j + 1] = '\0';
+            if (atoi(str_index) == (int)index_author) {
+                fprintf(stdout, "%s\n", graphe->liste_titres[i]);
+            }
+            free(str_index);
+            pnt = strstr(pnt + 1, "|");
+        }
+    }
+}
+
 void printGraphe(graphe_t *graphe, FILE *sortie) {
     fprintf(sortie, "%ld\n", graphe->nb_auteurs);
     for (size_t i = 0; i < graphe->nb_auteurs; i++) {
@@ -268,6 +298,7 @@ void addGraphe(graphe_t *graphe, data_t *data) {
         graphe->liste_titres[graphe->nb_titres] = realloc(
             graphe->liste_titres[graphe->nb_titres],
             sizeof(graphe->liste_titres[graphe->nb_titres]) + STR_LEN_DEF);
+        testAlloc(graphe->liste_titres[graphe->nb_titres]);
         strcat(graphe->liste_titres[graphe->nb_titres], "|");
         char *str_index1 = malloc(STR_LEN_DEF);
         sprintf(str_index1, "%d", index_auteur1);
@@ -276,6 +307,7 @@ void addGraphe(graphe_t *graphe, data_t *data) {
         graphe->liste_titres[graphe->nb_titres] =
             realloc(graphe->liste_titres[graphe->nb_titres],
                     strlen(graphe->liste_titres[graphe->nb_titres]) + 1);
+        testAlloc(graphe->liste_titres[graphe->nb_titres]);
     }
     graphe->nb_titres++;
     free(liste_auteurs_a_traiter);

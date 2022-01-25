@@ -50,5 +50,6 @@ int main(int argc, char **argv) {
 
     parse(argv[1], &info, &xmlData, &graphe);
     printGraphe(&graphe, sortie);
+    findTitleFromAutor(&graphe, "Frank Manola");
     return 0;
 }

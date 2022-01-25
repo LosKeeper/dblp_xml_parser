@@ -25,5 +25,12 @@ void printGraphe(graphe_t *graphe, FILE *sortie);
  * @param entree the file to import the graphe
  */
 void importGraphe(graphe_t *graphe, FILE *entree);
+/**
+ * @brief Print on stdout the name of the articles written by the author
+ *
+ * @param graphe the struct to store the graphe informations
+ * @param author_name the name of the author
+ */
+void findTitleFromAutor(graphe_t *graphe, char *author_name);
 
 #endif
