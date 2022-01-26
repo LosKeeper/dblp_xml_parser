@@ -2,7 +2,7 @@
 #define STRUCT_H
 #include <stdio.h>
 
-#define STR_LEN_DEF 100000
+#define STR_LEN_DEF 10000
 
 typedef struct parser_context_t {
     int text_count;

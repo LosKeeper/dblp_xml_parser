@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string.h>
 
 #include "graphe.h"
@@ -18,9 +19,14 @@ void handleText(char *txt, void *data, data_t *xmlData) {
         if (tag_title) {
             strcat(xmlData->titre, txt);
         } else if (tag_author) {
-            decode_html(txt);
-            strcat(xmlData->auteurs, txt);
+            char *temp = malloc(sizeof(txt) + 1);
+            strcpy(temp, txt);
+            decode_html(temp);
+            xmlData->auteurs = realloc(
+                xmlData->auteurs, strlen(xmlData->auteurs) + strlen(temp) + 3);
+            strcat(xmlData->auteurs, temp);
             strcat(xmlData->auteurs, ";");
+            free(temp);
         }
     }
 }
