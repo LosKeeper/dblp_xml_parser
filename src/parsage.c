@@ -17,16 +17,14 @@ void handleText(char *txt, void *data, data_t *xmlData) {
     if (lecture) {
         context->text_count++;
         if (tag_title) {
+            xmlData->titre = realloc(xmlData->titre,
+                                     strlen(xmlData->titre) + strlen(txt) + 2);
             strcat(xmlData->titre, txt);
         } else if (tag_author) {
-            char *temp = malloc(sizeof(txt) + 1);
-            strcpy(temp, txt);
-            decode_html(temp);
             xmlData->auteurs = realloc(
-                xmlData->auteurs, strlen(xmlData->auteurs) + strlen(temp) + 3);
-            strcat(xmlData->auteurs, temp);
+                xmlData->auteurs, strlen(xmlData->auteurs) + strlen(txt) + 3);
+            strcat(xmlData->auteurs, txt);
             strcat(xmlData->auteurs, ";");
-            free(temp);
         }
     }
 }
@@ -77,6 +75,7 @@ void decode_html(char *encoded_str) {
         }
         pnt[strlen(pnt) - n] = '\0';
     }
+    encoded_str = realloc(encoded_str, strlen(encoded_str) + 1);
 }
 
 void printAvancement(FILE *entree, long int taille_fichier) {

@@ -18,8 +18,8 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
     int CptFermant = 0;
     char carac_buffer = (char)fgetc(entree);
     char previous_carac;
-    char *data = malloc(STR_LEN_DEF);
-    testAlloc(data);
+    char *buffer = malloc(STR_LEN_DEF);
+    testAlloc(buffer);
     while (carac_buffer != EOF) {
         if (carac_buffer == '<') {
             CptOuvrant++;
@@ -34,23 +34,23 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                         if (CptOuvrant != CptFermant) {
                             fprintf(stderr,
                                     "Unexpected end of tag (missing '>')1\n");
-                            free(data);
+                            free(buffer);
                             fclose(entree);
                             return ERROR_UNEXPECTED_END_OF_TAG;
                         }
                         fclose(entree);
-                        // free(data);
+                        free(buffer);
                         return PARSER_OK;
                     }
-                    data[it] = carac_buffer;
+                    buffer[it] = carac_buffer;
                     previous_carac = carac_buffer;
                     carac_buffer = (char)fgetc(entree);
                     it++;
                 }
                 CptFermant++;
-                data[it] = '\0';
-                info->handleCloseTag(data, info->data, xmlData, graphe, entree,
-                                     taille_fichier);
+                buffer[it] = '\0';
+                info->handleCloseTag(buffer, info->data, xmlData, graphe,
+                                     entree, taille_fichier);
             } else {
                 while (carac_buffer != '>') {
                     if (carac_buffer == EOF) {
@@ -58,10 +58,10 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                             fprintf(stderr,
                                     "Unexpected end of tag (missing '>')2\n");
                             fclose(entree);
-                            // free(data);
+                            free(buffer);
                             return ERROR_UNEXPECTED_END_OF_TAG;
                         }
-                        // free(data);
+                        free(buffer);
                         fclose(entree);
                         return PARSER_OK;
                     }
@@ -74,14 +74,14 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                         carac_buffer = (char)fgetc(entree);
                         goto passe_fgetc;
                     }
-                    data[it] = carac_buffer;
+                    buffer[it] = carac_buffer;
                     previous_carac = carac_buffer;
                     carac_buffer = (char)fgetc(entree);
                     it++;
                 }
                 CptFermant++;
-                data[it] = '\0';
-                info->handleOpenTag(data, info->data, xmlData);
+                buffer[it] = '\0';
+                info->handleOpenTag(buffer, info->data, xmlData);
             }
         } else {
             int it = 0;
@@ -90,28 +90,28 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                     if (CptOuvrant != CptFermant) {
                         fprintf(stderr,
                                 "Unexpected end of tag (missing'>')3\n");
-                        // free(data);
+                        free(buffer);
                         fclose(entree);
                         return ERROR_UNEXPECTED_END_OF_TAG;
                     }
-                    // free(data);
+                    free(buffer);
                     fclose(entree);
                     return PARSER_OK;
                 }
-                data[it] = carac_buffer;
+                buffer[it] = carac_buffer;
                 previous_carac = carac_buffer;
                 carac_buffer = (char)fgetc(entree);
                 it++;
             }
-            data[it] = '\0';
-            info->handleText(data, info->data, xmlData);
+            buffer[it] = '\0';
+            info->handleText(buffer, info->data, xmlData);
             goto passe_fgetc;
         }
         previous_carac = carac_buffer;
         carac_buffer = (char)fgetc(entree);
     passe_fgetc:;
     }
-    // free(data);
+    free(buffer);
     fclose(entree);
     return PARSER_OK;
 }
