@@ -36,4 +36,4 @@ clean:
 	rm -f $(OBJDIR)/*.o
 	rm -f $(OBJDIR)/*.gcda
 	rm -f $(OBJDIR)/*.gcno
-	rm -f $(BINDIR)/$(TARGET)
+	rm -f tests
