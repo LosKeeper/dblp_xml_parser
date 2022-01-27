@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include "arguments.h"
+#include "dijkstra.h"
 #include "graphe.h"
 #include "struct.h"
 #include "xmlp.h"
@@ -100,7 +101,7 @@ void checkOptionsValidity(options_t *options) {
                 initInfo(info, &context);
                 FILE *entree = fopen(options->input_binary, "r");
                 importGraphe(graphe, entree);
-                // dijkstra(graphe, options->auteur1, options->auteur2);
+                dijkstra(options->auteur1, options->auteur2, graphe);
             }
         }
     }

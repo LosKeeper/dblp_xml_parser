@@ -3,17 +3,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct graphe_type {
-    char **liste_auteurs;
-    int nb_auteurs;
-    char **liste_titres;
-    int nb_titres;
-    size_t **liste_sucesseurs;
-    size_t *liste_nb_liens;
-} graphe_type;
+#include "graphe.h"
+#include "struct.h"
 
 /*
-size_t** nmbre_separateur_a_sauter(int nb_auteur, graphe_type* graphe){
+size_t** nmbre_separateur_a_sauter(int nb_auteur, graphe_t* graphe){
     int k=0;
     int somme=0;
     size_t **liste_sucesseurs_buffer=malloc(sizeof(graphe->liste_sucesseurs));
@@ -26,7 +20,7 @@ size_t** nmbre_separateur_a_sauter(int nb_auteur, graphe_type* graphe){
 }
 */
 /*
-int arriver(int nb_auteur_precedent, int nb_puit, graphe_type* graphe){
+int arriver(int nb_auteur_precedent, int nb_puit, graphe_t* graphe){
     size_t **liste_sucesseurs_buffer=malloc(sizeof(graphe->liste_sucesseurs));
     liste_sucesseurs_buffer=nmbre_separateur_a_sauter(nb_auteur_precedent,
 graphe); int k=0; while(k!=*graphe->liste_nb_liens){
@@ -72,7 +66,7 @@ void existence_auteur(int numero_auteur_un, int numero_auteur_deux) {
 }
 
 void existence_coecriture(int numero_auteur_un, int numero_auteur_deux,
-                          graphe_type graphe) {
+                          graphe_t graphe) {
     if (graphe.liste_nb_liens[numero_auteur_un] == 0) {
         printf("L'auteur source (auteur un) n'a co-écrit aucun récit. ");
         printf("Le chemin le plus court est de 0 (chemin impossible entre les "
@@ -86,7 +80,7 @@ void existence_coecriture(int numero_auteur_un, int numero_auteur_deux,
 }
 
 void existence_lien_direct(int numero_auteur_un, int numero_auteur_deux,
-                           graphe_type graphe) {
+                           graphe_t graphe) {
     int somme = 0;
     int k = 0;
     while (somme != (int)graphe.liste_nb_liens[numero_auteur_un]) {
@@ -98,7 +92,7 @@ void existence_lien_direct(int numero_auteur_un, int numero_auteur_deux,
     }
 }
 
-void dijkstra(char *auteur1, char *auteur2, graphe_type *graphe) {
+void dijkstra(char *auteur1, char *auteur2, graphe_t *graphe) {
     int etape_chemin = 0;
     (void)etape_chemin;
     int numero_auteur_un = -1;
@@ -109,7 +103,7 @@ void dijkstra(char *auteur1, char *auteur2, graphe_type *graphe) {
         printf("Le chemin le plus court est de 0");
         goto fin_boucle;
     }
-    while (k < ((graphe->nb_auteurs) - 1)) {
+    while (k < ((int)(graphe->nb_auteurs) - 1)) {
         if (graphe->liste_auteurs[k] == auteur1) {
             numero_auteur_un = k;
             k++;
