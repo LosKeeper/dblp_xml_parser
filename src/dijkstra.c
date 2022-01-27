@@ -44,9 +44,8 @@ int arriver(int nb_auteur_precedent, int nb_puit, graphe_type* graphe){
     return 0;
 }
 */
-char* str_cat(){}
 
-void chemin(int** tableau_dijkstra,int numero_auteur_deux, int cout_chemin){
+/*void chemin(int** tableau_dijkstra,int numero_auteur_deux, int cout_chemin){
     printf("Le coût de ce chemin est de : %d \n", cout_chemin);
     printf("Le chemin est le suivant : \n");
     int k=0;
@@ -94,10 +93,10 @@ void existence_lien_direct(int numero_auteur_un, int numero_auteur_deux,graphe_t
         }
     }
 }
+*/
 
 
 char* dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
-    int etape_chemin=0;
     int numero_auteur_un=-1;
     int numero_auteur_deux=-1;
     int k=0;
