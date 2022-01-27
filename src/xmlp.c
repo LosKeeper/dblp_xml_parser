@@ -34,12 +34,12 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                         if (CptOuvrant != CptFermant) {
                             fprintf(stderr,
                                     "Unexpected end of tag (missing '>')1\n");
-                            free(buffer);
+                            // free(buffer);
                             fclose(entree);
                             return ERROR_UNEXPECTED_END_OF_TAG;
                         }
                         fclose(entree);
-                        free(buffer);
+                        // free(buffer);
                         return PARSER_OK;
                     }
                     buffer[it] = carac_buffer;
@@ -58,10 +58,10 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                             fprintf(stderr,
                                     "Unexpected end of tag (missing '>')2\n");
                             fclose(entree);
-                            free(buffer);
+                            // free(buffer);
                             return ERROR_UNEXPECTED_END_OF_TAG;
                         }
-                        free(buffer);
+                        // free(buffer);
                         fclose(entree);
                         return PARSER_OK;
                     }
@@ -90,11 +90,11 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
                     if (CptOuvrant != CptFermant) {
                         fprintf(stderr,
                                 "Unexpected end of tag (missing'>')3\n");
-                        free(buffer);
+                        // free(buffer);
                         fclose(entree);
                         return ERROR_UNEXPECTED_END_OF_TAG;
                     }
-                    free(buffer);
+                    // free(buffer);
                     fclose(entree);
                     return PARSER_OK;
                 }
@@ -111,7 +111,7 @@ parser_error_type_t parse(const char *filename, parser_info_t *info,
         carac_buffer = (char)fgetc(entree);
     passe_fgetc:;
     }
-    free(buffer);
+    // free(buffer);
     fclose(entree);
     return PARSER_OK;
 }
