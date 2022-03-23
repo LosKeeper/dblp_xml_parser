@@ -37,11 +37,7 @@ graphe); int k=0; while(k!=*graphe->liste_nb_liens){
 }
 */
 
-<<<<<<< HEAD
-/*void chemin(int** tableau_dijkstra,int numero_auteur_deux, int cout_chemin){
-=======
 void chemin(int **tableau_dijkstra, int numero_auteur_deux, int cout_chemin) {
->>>>>>> 381bfe93614807eee4b3d79c53d841aec8036d2a
     printf("Le coût de ce chemin est de : %d \n", cout_chemin);
     printf("Le chemin est le suivant : \n");
     int k = 0;
@@ -95,16 +91,7 @@ void existence_lien_direct(int numero_auteur_un, int numero_auteur_deux,
         }
     }
 }
-*/
 
-<<<<<<< HEAD
-
-char* dijkstra(char* auteur1, char* auteur2, graphe_type* graphe){
-    int numero_auteur_un=-1;
-    int numero_auteur_deux=-1;
-    int k=0;
-    if(!strcmp(auteur1,auteur2)){
-=======
 void dijkstra(char *auteur1, char *auteur2, graphe_t *graphe) {
     int etape_chemin = 0;
     (void)etape_chemin;
@@ -112,7 +99,6 @@ void dijkstra(char *auteur1, char *auteur2, graphe_t *graphe) {
     int numero_auteur_deux = -1;
     int k = 0;
     if (!strcmp(auteur1, auteur2)) {
->>>>>>> 381bfe93614807eee4b3d79c53d841aec8036d2a
         printf("C'est le même auteur\n");
         printf("Le chemin le plus court est de 0");
         goto fin_boucle;
