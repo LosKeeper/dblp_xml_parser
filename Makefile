@@ -1,5 +1,5 @@
 CC ?= gcc
-CFLAGS ?= -Wall -Wextra -Werror -g
+CFLAGS ?= -g -O0 -ggdb -Wall -Wextra -Werror 
 LDLIBS ?=-lm
 
 INCLUDE_PATH = ./include

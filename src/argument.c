@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include "arguments.h"
+#include "dijkstra.h"
 #include "graphe.h"
 #include "struct.h"
 #include "xmlp.h"
@@ -65,42 +66,42 @@ void checkOptionsValidity(options_t *options) {
             abort();
         }
         if (options->output_binary) {
-            graphe_t graphe;
-            initGraphe(&graphe);
-            data_t data;
-            initData(&data);
-            parser_info_t info;
+            graphe_t *graphe = malloc(sizeof(graphe_t));
+            initGraphe(graphe);
+            data_t *data = malloc(sizeof(data_t));
+            initData(data);
+            parser_info_t *info = malloc(sizeof(parser_info_t));
             parser_context_t context = {};
-            initInfo(&info, &context);
-            parse(options->input_database, &info, &data, &graphe);
+            initInfo(info, &context);
+            parse(options->input_database, info, data, graphe);
             FILE *sortie = fopen(options->output_binary, "w");
-            printGraphe(&graphe, sortie);
+            printGraphe(graphe, sortie);
         }
     }
     if (options->input_binary) {
         if (options->auteur) {
-            graphe_t graphe;
-            initGraphe(&graphe);
-            data_t data;
-            initData(&data);
-            parser_info_t info;
+            graphe_t *graphe = malloc(sizeof(graphe_t));
+            initGraphe(graphe);
+            data_t *data = malloc(sizeof(data_t));
+            initData(data);
+            parser_info_t *info = malloc(sizeof(parser_info_t));
             parser_context_t context = {};
-            initInfo(&info, &context);
+            initInfo(info, &context);
             FILE *entree = fopen(options->input_binary, "r");
-            importGraphe(&graphe, entree);
-            findTitleFromAuthor(&graphe, options->auteur);
+            importGraphe(graphe, entree);
+            findTitleFromAuthor(graphe, options->auteur);
         } else if (options->auteur1) {
             if (options->auteur2) {
-                graphe_t graphe;
-                initGraphe(&graphe);
-                data_t data;
-                initData(&data);
-                parser_info_t info;
+                graphe_t *graphe = malloc(sizeof(graphe_t));
+                initGraphe(graphe);
+                data_t *data = malloc(sizeof(data_t));
+                initData(data);
+                parser_info_t *info = malloc(sizeof(parser_info_t));
                 parser_context_t context = {};
-                initInfo(&info, &context);
+                initInfo(info, &context);
                 FILE *entree = fopen(options->input_binary, "r");
-                importGraphe(&graphe, entree);
-                // dijkstra(graphe, options->auteur1, options->auteur2);
+                importGraphe(graphe, entree);
+                dijkstra(options->auteur1, options->auteur2, graphe);
             }
         }
     }

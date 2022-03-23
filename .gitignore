@@ -3,3 +3,8 @@ sortie.txt
 sortie2.txt
 log.txt
 old.c
+my_export.txt
+/obj
+dblp-parsing
+tests
+/.vscode
